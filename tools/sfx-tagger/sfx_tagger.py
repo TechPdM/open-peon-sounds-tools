@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""sfx-tagger: Categorise short UI sound effects by sentiment, duration, loudness, and intensity.
+"""sfx-tagger: Categorise short UI sound effects across 8 dimensions.
+
+Tags each file with: sentiment, duration, loudness, intensity, pitch,
+envelope, tonality, and sound type.
 
 Usage:
     python3 sfx_tagger.py ./sounds/*.wav --out tags.json
@@ -10,9 +13,12 @@ import argparse
 import json
 import os
 import sys
+import warnings
 
 import librosa
 import numpy as np
+
+warnings.filterwarnings("ignore", message="n_fft=.*is too large")
 
 
 # ── Feature extraction ──────────────────────────────────────────────
@@ -21,38 +27,59 @@ import numpy as np
 def extract_features(path, sr=22050):
     """Extract audio features from a WAV file. Returns a dict of raw feature values."""
     y, sr = librosa.load(path, sr=sr)
+    hop_length = 512
 
     duration = librosa.get_duration(y=y, sr=sr)
 
+    # RMS energy
     rms = librosa.feature.rms(y=y)[0]
     mean_rms = float(np.mean(rms))
     peak = float(np.max(np.abs(y))) if len(y) > 0 else 0.0
     crest_factor = peak / mean_rms if mean_rms > 0 else 0.0
-
-    # RMS in dB (approximation of loudness)
     rms_db = 20 * np.log10(mean_rms) if mean_rms > 0 else -80.0
 
     # Attack time: time from start to peak RMS frame
     if len(rms) > 0:
         peak_frame = int(np.argmax(rms))
-        hop_length = 512  # librosa default
         attack_time = float(peak_frame * hop_length / sr)
     else:
+        peak_frame = 0
         attack_time = 0.0
 
-    # Spectral centroid (mean, in Hz)
+    # Decay time: time from peak RMS to where RMS drops below -40dB (or end)
+    if len(rms) > 0 and peak_frame < len(rms) - 1:
+        silence_threshold = 10 ** (-40 / 20)  # -40 dB in linear
+        tail = rms[peak_frame:]
+        below = np.where(tail < silence_threshold)[0]
+        if len(below) > 0:
+            decay_frames = int(below[0])
+        else:
+            decay_frames = len(tail)
+        decay_time = float(decay_frames * hop_length / sr)
+    else:
+        decay_time = 0.0
+
+    # Spectral centroid
     centroid = librosa.feature.spectral_centroid(y=y, sr=sr)[0]
     mean_centroid = float(np.mean(centroid))
 
-    # Spectral rolloff (mean, in Hz)
+    # Spectral rolloff
     rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)[0]
     mean_rolloff = float(np.mean(rolloff))
 
-    # Zero-crossing rate (mean)
+    # Spectral bandwidth
+    bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)[0]
+    mean_bandwidth = float(np.mean(bandwidth))
+
+    # Spectral flatness
+    flatness = librosa.feature.spectral_flatness(y=y)[0]
+    mean_flatness = float(np.mean(flatness))
+
+    # Zero-crossing rate
     zcr = librosa.feature.zero_crossing_rate(y=y)[0]
     mean_zcr = float(np.mean(zcr))
 
-    # Pitch direction: slope of spectral centroid over time
+    # Centroid slope (pitch direction over time)
     if len(centroid) > 1:
         frames = np.arange(len(centroid))
         coeffs = np.polyfit(frames, centroid, 1)
@@ -60,19 +87,73 @@ def extract_features(path, sr=22050):
     else:
         centroid_slope = 0.0
 
+    # Fundamental frequency via pyin
+    f0, voiced_flag, _ = librosa.pyin(y, fmin=50, fmax=8000, sr=sr)
+    voiced_f0 = f0[voiced_flag] if voiced_flag is not None else np.array([])
+    if len(voiced_f0) > 0:
+        fundamental_freq = float(np.median(voiced_f0))
+    else:
+        # Fallback to centroid as pitch proxy for noisy sounds
+        fundamental_freq = mean_centroid
+
+    # Harmonic ratio
+    y_harmonic = librosa.effects.harmonic(y=y)
+    total_energy = float(np.sum(y ** 2))
+    harmonic_energy = float(np.sum(y_harmonic ** 2))
+    harmonic_ratio = harmonic_energy / total_energy if total_energy > 0 else 0.0
+
+    # Onset count
+    onsets = librosa.onset.onset_detect(y=y, sr=sr, hop_length=hop_length)
+    onset_count = int(len(onsets))
+
     return {
         "duration": duration,
         "rms_db": rms_db,
         "crest_factor": crest_factor,
         "attack_time": attack_time,
+        "decay_time": decay_time,
         "spectral_centroid": mean_centroid,
         "spectral_rolloff": mean_rolloff,
+        "spectral_bandwidth": mean_bandwidth,
+        "spectral_flatness": mean_flatness,
         "zcr": mean_zcr,
         "centroid_slope": centroid_slope,
+        "fundamental_freq": fundamental_freq,
+        "harmonic_ratio": harmonic_ratio,
+        "onset_count": onset_count,
     }
 
 
-# ── Rule-based classifier ───────────────────────────────────────────
+# ── Rule-based classifiers ──────────────────────────────────────────
+
+
+def classify_sentiment(features):
+    """Positive/negative/neutral based on spectral brightness and pitch direction."""
+    score = 0.0
+
+    centroid = features["spectral_centroid"]
+    if centroid > 3000:
+        score += 1
+    elif centroid < 1500:
+        score -= 1
+
+    rolloff = features["spectral_rolloff"]
+    if rolloff > 6000:
+        score += 0.5
+    elif rolloff < 3000:
+        score -= 0.5
+
+    slope = features["centroid_slope"]
+    if slope > 5:
+        score += 1
+    elif slope < -5:
+        score -= 1
+
+    if score >= 1:
+        return "positive"
+    elif score <= -1:
+        return "negative"
+    return "neutral"
 
 
 def classify_duration(features, short_thresh, long_thresh):
@@ -97,19 +178,16 @@ def classify_intensity(features):
     """Composite score from crest factor, attack time, and ZCR."""
     score = 0.0
 
-    # High crest factor = sharp transient = intense
     if features["crest_factor"] > 8:
         score += 1
     elif features["crest_factor"] < 4:
         score -= 1
 
-    # Fast attack = intense
     if features["attack_time"] < 0.02:
         score += 1
     elif features["attack_time"] > 0.1:
         score -= 1
 
-    # High ZCR = harsh/buzzy = intense
     if features["zcr"] > 0.15:
         score += 1
     elif features["zcr"] < 0.05:
@@ -122,36 +200,108 @@ def classify_intensity(features):
     return "medium"
 
 
-def classify_sentiment(features):
-    """Positive/negative/neutral based on spectral brightness and pitch direction."""
-    score = 0.0
+def classify_pitch(features):
+    """Low/mid/high based on fundamental frequency."""
+    freq = features["fundamental_freq"]
+    if freq < 300:
+        return "low"
+    elif freq > 2000:
+        return "high"
+    return "mid"
 
-    # Bright centroid → positive, dark → negative
+
+def classify_envelope(features):
+    """Percussive/sustained/swelling/decaying based on temporal energy shape."""
+    duration = features["duration"]
+    attack = features["attack_time"]
+    decay = features["decay_time"]
+
+    if duration <= 0:
+        return "percussive"
+
+    attack_ratio = attack / duration
+    decay_ratio = decay / duration
+
+    # Swelling: most of the sound is the attack phase
+    if attack_ratio > 0.5:
+        return "swelling"
+
+    # Percussive: fast attack and short decay
+    if attack < 0.02 and decay_ratio < 0.6:
+        return "percussive"
+
+    # Decaying: fast attack, long tail
+    if attack_ratio < 0.2 and decay_ratio > 0.6:
+        return "decaying"
+
+    return "sustained"
+
+
+def classify_tonality(features):
+    """Tonal/noisy based on harmonic ratio and spectral flatness."""
+    harmonic = features["harmonic_ratio"]
+    flatness = features["spectral_flatness"]
+
+    # High harmonic content + peaked spectrum = tonal
+    if harmonic > 0.5 and flatness < 0.3:
+        return "tonal"
+
+    # Low harmonic content or flat spectrum = noisy
+    if harmonic < 0.3 or flatness > 0.5:
+        return "noisy"
+
+    # Ambiguous — lean on harmonic ratio as the stronger signal
+    if harmonic > 0.4:
+        return "tonal"
+    return "noisy"
+
+
+def classify_type(features):
+    """Heuristic sound type classification. Priority-ordered, first match wins."""
+    duration = features["duration"]
+    flatness = features["spectral_flatness"]
     centroid = features["spectral_centroid"]
-    if centroid > 3000:
-        score += 1
-    elif centroid < 1500:
-        score -= 1
-
-    # High rolloff → brighter energy distribution → positive
-    rolloff = features["spectral_rolloff"]
-    if rolloff > 6000:
-        score += 0.5
-    elif rolloff < 3000:
-        score -= 0.5
-
-    # Rising pitch → positive, falling → negative
+    zcr = features["zcr"]
     slope = features["centroid_slope"]
-    if slope > 5:
-        score += 1
-    elif slope < -5:
-        score -= 1
+    freq = features["fundamental_freq"]
+    attack = features["attack_time"]
+    harmonic = features["harmonic_ratio"]
+    decay = features["decay_time"]
 
-    if score >= 1:
-        return "positive"
-    elif score <= -1:
-        return "negative"
-    return "neutral"
+    is_tonal = harmonic > 0.4 and flatness < 0.3
+    is_noisy = not is_tonal
+    is_percussive = attack < 0.02
+    has_strong_slope = abs(slope) > 50
+
+    # Click: very short, percussive, broadband
+    if duration < 0.05 and is_percussive and flatness > 0.1:
+        return "click"
+
+    # Thud: percussive, low pitch, dark
+    if is_percussive and freq < 300 and centroid < 1500:
+        return "thud"
+
+    # Buzz: noisy, sustained-ish, harsh, mid-low pitch
+    if is_noisy and zcr > 0.1 and duration > 0.1 and freq < 2000:
+        return "buzz"
+
+    # Whoosh: noisy, strong slope, medium-long
+    if is_noisy and has_strong_slope and duration > 0.15:
+        return "whoosh"
+
+    # Sweep: strong slope, medium-long (tonal or noisy)
+    if has_strong_slope and duration > 0.15:
+        return "sweep"
+
+    # Chime: tonal, high pitch, decaying
+    if is_tonal and freq > 1000 and decay > duration * 0.4:
+        return "chime"
+
+    # Beep: tonal fallback
+    if is_tonal:
+        return "beep"
+
+    return "beep"
 
 
 def classify(features, short_thresh, long_thresh, quiet_thresh, loud_thresh):
@@ -161,6 +311,10 @@ def classify(features, short_thresh, long_thresh, quiet_thresh, loud_thresh):
         "duration": classify_duration(features, short_thresh, long_thresh),
         "loudness": classify_loudness(features, quiet_thresh, loud_thresh),
         "intensity": classify_intensity(features),
+        "pitch": classify_pitch(features),
+        "envelope": classify_envelope(features),
+        "tonality": classify_tonality(features),
+        "type": classify_type(features),
     }
 
 
@@ -169,7 +323,7 @@ def classify(features, short_thresh, long_thresh, quiet_thresh, loud_thresh):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Tag short UI sound effects with sentiment, duration, loudness, and intensity."
+        description="Tag short UI sound effects across 8 dimensions."
     )
     parser.add_argument("files", nargs="+", help="WAV files to analyse")
     parser.add_argument("--out", "-o", default=None, help="Output JSON file (default: tags.json in same directory as input files)")
