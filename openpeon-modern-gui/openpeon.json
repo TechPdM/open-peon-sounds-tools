@@ -1,0 +1,69 @@
+{
+  "cesp_version": "1.0",
+  "name": "modern-gui",
+  "display_name": "Modern GUI",
+  "version": "1.0.0",
+  "description": "Futuristic synth UI sounds — hightech confirms, cybernetic alerts, and power-up sweeps",
+  "author": { "name": "Mark", "github": "mark" },
+  "license": "CC0-1.0",
+  "language": "en",
+  "tags": ["ui", "synth", "futuristic", "cyberpunk"],
+  "categories": {
+    "session.start": {
+      "sounds": [
+        { "file": "sounds/popup2-open.wav", "label": "Popup open (bright)", "sha256": "587c2604f021cb8c50e0151dff06429b8497b5188dbb41ab96b7508c6c420a3b" },
+        { "file": "sounds/popup3-open.wav", "label": "Popup open (neutral)", "sha256": "08f9ab8402b7955db1c3fa138ca9fd9b8f4646fdbf3acd3395e4eb5e85c28a00" },
+        { "file": "sounds/menu-move5.wav", "label": "Session ping", "sha256": "7cdad2a0f7d458a60cf10ea1d1948c0ec3faf9b1ab372fec4993eb0448c87352" }
+      ]
+    },
+    "task.acknowledge": {
+      "sounds": [
+        { "file": "sounds/hightech_confirm1.wav", "label": "Hightech confirm 1", "sha256": "e546e1e190784fd10b565b3ad28a440f46a5fc23394371a4b31130e265941192" },
+        { "file": "sounds/hightech_confirm2.wav", "label": "Hightech confirm 2", "sha256": "dad121188a3091bf777342b7006550d5ab8283076e9faaaa770e5f79db12fcd4" },
+        { "file": "sounds/hightech_confirm3.wav", "label": "Hightech confirm 3", "sha256": "dd8d71337b05f35f44e34e53d5c04314949c05fda8996c136b9d6f75eac3fb97" },
+        { "file": "sounds/menu-move1.wav", "label": "Menu chime", "sha256": "53fc8ee978a68a92cadbc41c91271fc97758488023aebcd70142250407308775" },
+        { "file": "sounds/menu-move4.wav", "label": "Menu ping", "sha256": "41cfa9b079d6d02b94f235d8f40eab3d4a05c9cf7ee370fc476c14fe2947c63c" }
+      ]
+    },
+    "task.complete": {
+      "sounds": [
+        { "file": "sounds/alert2-version-3.wav", "label": "Success alert 1", "sha256": "8a957853a5fbe8071ceef90ce5aa1f046ffeb0d4649766626f61737c566702e2" },
+        { "file": "sounds/alert2-version-4.wav", "label": "Success alert 2", "sha256": "bd880f09b9e1356bee6ec6514aa945c2023395f4c066b4c2e95bc45a3e03dc5f" },
+        { "file": "sounds/alert2-version-6.wav", "label": "Success alert 3", "sha256": "9468abe4892eda540e2f5072757d37017ac6605956363a0026dc36c29d9f2f2f" },
+        { "file": "sounds/alert2-version-7.wav", "label": "Success alert 4", "sha256": "87393907550531cfb2d34f0b82f9818ec39c3903c00144f6d3e136f239c53112" },
+        { "file": "sounds/alert2-version-12.wav", "label": "Success alert 5", "sha256": "1a6c753c025feca9fe25b3471218fe4a08b6a9e82b4f015e70cb5039ae3922f0" },
+        { "file": "sounds/alert2-version-13.wav", "label": "Success alert 6", "sha256": "25b33365264054820463c275de64ac959c8e03e438e51c8e5733da13be887127" }
+      ]
+    },
+    "task.error": {
+      "sounds": [
+        { "file": "sounds/ui-error1.wav", "label": "UI error buzz", "sha256": "c803cd1cb7953e4ad620bc4879c0c4caf32866a24a533c13d62bb5b17ee01d58" },
+        { "file": "sounds/popup-close.wav", "label": "Popup close (dark)", "sha256": "8c89e78c3caa674829e002e6147b41f4232f53000137e456940cb4d13b2c605e" },
+        { "file": "sounds/popup-open.wav", "label": "Popup open (harsh)", "sha256": "17ac62209f7641933a1163862781ff94295b282988e460dd864b6ed532495851" },
+        { "file": "sounds/ui-misc1.wav", "label": "UI misc buzz", "sha256": "8f5e35766a944c986aefc22549c2c489a7b2e2bbb4de802e03efd63a17472cef" }
+      ]
+    },
+    "input.required": {
+      "sounds": [
+        { "file": "sounds/notification1.wav", "label": "Notification 1", "sha256": "5086f1842934fcc61263fb71a459f93507816fa254741b3d6d59403a9a6a2ca7" },
+        { "file": "sounds/notification2.wav", "label": "Notification 2", "sha256": "88d70ba88c120706fd17f921741883455a686d27189f82906761e448ce384b6b" },
+        { "file": "sounds/hightech_notification1.wav", "label": "Hightech notification 1", "sha256": "b846dde3859fbb4c2dea769631a07584e315bc002db670f29559e661ed0f12d4" },
+        { "file": "sounds/hightech_notification2.wav", "label": "Hightech notification 2", "sha256": "555a9fd3684f7c8f898ca8d591a66f8a068064b3cb2c5c46cb9858ddc486011d" },
+        { "file": "sounds/hightech_notification3.wav", "label": "Hightech notification 3", "sha256": "847a733aead24437ad29f371ff509924bef9f5cc59bf055478970cc38730cef8" }
+      ]
+    },
+    "resource.limit": {
+      "sounds": [
+        { "file": "sounds/alert2-version-9.wav", "label": "Low warning tone", "sha256": "c17c829e873dd52ac93ee72404045f39252d8a4623d111a29acfcb9dac0cd644" },
+        { "file": "sounds/alert2-version-11.wav", "label": "Warning sweep", "sha256": "f1e08c790f3d4db9731696305221d3c6f5056d80fec3c18da09f8252aefadb0d" },
+        { "file": "sounds/popup3-close.wav", "label": "Depleted tone", "sha256": "f255296f05284e1ca1f525905ef9d99beffbca6b0a61c4b1c02d69b135675375" }
+      ]
+    },
+    "user.spam": {
+      "sounds": [
+        { "file": "sounds/menu-scroll-1.wav", "label": "Menu scroll", "sha256": "c4fd9cdb6fd947ace1757e2b4d6ca9a8f7fb823400556cf5642cbd579b366c77" },
+        { "file": "sounds/menu-move6.wav", "label": "Menu whoosh (dark)", "sha256": "066264a128988d413e7f730c7a42bd1015093c6ea36437073fbc80bc0afc9bcd" }
+      ]
+    }
+  }
+}
