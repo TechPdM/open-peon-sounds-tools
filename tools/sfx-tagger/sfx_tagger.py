@@ -46,11 +46,14 @@ def extract_features(path, sr=22050):
         peak_frame = 0
         attack_time = 0.0
 
-    # Decay time: time from peak RMS to where RMS drops below -40dB (or end)
+    # Decay time: time from peak RMS to where RMS drops to 10% of peak RMS
+    # (relative threshold avoids the -40dB absolute threshold problem where
+    # quiet sounds appear to have no decay)
     if len(rms) > 0 and peak_frame < len(rms) - 1:
-        silence_threshold = 10 ** (-40 / 20)  # -40 dB in linear
+        peak_rms = rms[peak_frame]
+        decay_threshold = peak_rms * 0.1  # -20dB relative to peak
         tail = rms[peak_frame:]
-        below = np.where(tail < silence_threshold)[0]
+        below = np.where(tail < decay_threshold)[0]
         if len(below) > 0:
             decay_frames = int(below[0])
         else:
@@ -80,31 +83,72 @@ def extract_features(path, sr=22050):
     mean_zcr = float(np.mean(zcr))
 
     # Centroid slope (pitch direction over time)
-    if len(centroid) > 1:
-        frames = np.arange(len(centroid))
-        coeffs = np.polyfit(frames, centroid, 1)
-        centroid_slope = float(coeffs[0])
+    # Only computed over non-silent frames to avoid silence at the tail
+    # dragging the slope negative
+    if len(centroid) > 1 and len(rms) > 1:
+        rms_threshold = np.max(rms) * 0.05
+        active_mask = rms[:len(centroid)] > rms_threshold
+        active_centroid = centroid[active_mask]
+        if len(active_centroid) > 2:
+            frames = np.arange(len(active_centroid))
+            coeffs = np.polyfit(frames, active_centroid, 1)
+            centroid_slope = float(coeffs[0])
+        else:
+            centroid_slope = 0.0
     else:
         centroid_slope = 0.0
 
     # Fundamental frequency via pyin
-    f0, voiced_flag, _ = librosa.pyin(y, fmin=50, fmax=8000, sr=sr)
-    voiced_f0 = f0[voiced_flag] if voiced_flag is not None else np.array([])
-    if len(voiced_f0) > 0:
-        fundamental_freq = float(np.median(voiced_f0))
+    # Guard against very short signals where pyin can fail
+    if len(y) > 2048:
+        f0, voiced_flag, _ = librosa.pyin(y, fmin=80, fmax=4000, sr=sr)
+        if voiced_flag is not None:
+            voiced_f0 = f0[voiced_flag]
+        else:
+            voiced_f0 = np.array([])
+        if len(voiced_f0) > 0:
+            fundamental_freq = float(np.median(voiced_f0))
+        else:
+            fundamental_freq = mean_centroid
     else:
-        # Fallback to centroid as pitch proxy for noisy sounds
         fundamental_freq = mean_centroid
 
-    # Harmonic ratio
-    y_harmonic = librosa.effects.harmonic(y=y)
-    total_energy = float(np.sum(y ** 2))
-    harmonic_energy = float(np.sum(y_harmonic ** 2))
-    harmonic_ratio = harmonic_energy / total_energy if total_energy > 0 else 0.0
+    # Harmonic ratio — use spectral flatness as a more reliable tonality
+    # indicator for synthesised sounds, where harmonic/percussive separation
+    # can fail. We keep the HPSS ratio but also compute an autocorrelation-
+    # based periodicity measure.
+    if len(y) > 2048:
+        y_harmonic = librosa.effects.harmonic(y=y)
+        total_energy = float(np.sum(y ** 2))
+        harmonic_energy = float(np.sum(y_harmonic ** 2))
+        harmonic_ratio = harmonic_energy / total_energy if total_energy > 0 else 0.0
+    else:
+        harmonic_ratio = 0.0
+
+    # Autocorrelation periodicity: how periodic/tonal the signal is
+    # This catches synthesised tonal sounds that HPSS misclassifies
+    if len(y) > 2048:
+        autocorr = librosa.autocorrelate(y, max_size=sr // 80)
+        if len(autocorr) > 1 and autocorr[0] > 0:
+            # Normalise and find strongest peak after lag 0
+            autocorr_norm = autocorr / autocorr[0]
+            # Skip the first few lags (too close to lag 0)
+            min_lag = sr // 4000  # ~5.5 samples at 22050
+            if min_lag < len(autocorr_norm):
+                peak_autocorr = float(np.max(autocorr_norm[min_lag:]))
+            else:
+                peak_autocorr = 0.0
+        else:
+            peak_autocorr = 0.0
+    else:
+        peak_autocorr = 0.0
 
     # Onset count
-    onsets = librosa.onset.onset_detect(y=y, sr=sr, hop_length=hop_length)
-    onset_count = int(len(onsets))
+    if len(y) > 2048:
+        onsets = librosa.onset.onset_detect(y=y, sr=sr, hop_length=hop_length)
+        onset_count = int(len(onsets))
+    else:
+        onset_count = 1
 
     return {
         "duration": duration,
@@ -120,6 +164,7 @@ def extract_features(path, sr=22050):
         "centroid_slope": centroid_slope,
         "fundamental_freq": fundamental_freq,
         "harmonic_ratio": harmonic_ratio,
+        "peak_autocorr": peak_autocorr,
         "onset_count": onset_count,
     }
 
@@ -227,32 +272,47 @@ def classify_envelope(features):
         return "swelling"
 
     # Percussive: fast attack and short decay
-    if attack < 0.02 and decay_ratio < 0.6:
+    if attack < 0.02 and decay_ratio < 0.3:
         return "percussive"
 
     # Decaying: fast attack, long tail
-    if attack_ratio < 0.2 and decay_ratio > 0.6:
+    if attack_ratio < 0.2 and decay_ratio > 0.5:
         return "decaying"
 
     return "sustained"
 
 
 def classify_tonality(features):
-    """Tonal/noisy based on harmonic ratio and spectral flatness."""
-    harmonic = features["harmonic_ratio"]
-    flatness = features["spectral_flatness"]
+    """Tonal/noisy using autocorrelation periodicity and spectral flatness.
 
-    # High harmonic content + peaked spectrum = tonal
+    HPSS-based harmonic ratio is unreliable for many synthesised UI sounds,
+    so we primarily use autocorrelation (is there a repeating period?) and
+    spectral flatness (is the spectrum peaked or flat?).
+    """
+    autocorr = features["peak_autocorr"]
+    flatness = features["spectral_flatness"]
+    harmonic = features["harmonic_ratio"]
+
+    # Strong autocorrelation = definitely periodic/tonal
+    if autocorr > 0.5:
+        return "tonal"
+
+    # Very flat spectrum = definitely noisy
+    if flatness > 0.5:
+        return "noisy"
+
+    # Low flatness (peaked spectrum) suggests tonal content
+    if flatness < 0.15:
+        return "tonal"
+
+    # HPSS agrees it's harmonic
     if harmonic > 0.5 and flatness < 0.3:
         return "tonal"
 
-    # Low harmonic content or flat spectrum = noisy
-    if harmonic < 0.3 or flatness > 0.5:
-        return "noisy"
-
-    # Ambiguous — lean on harmonic ratio as the stronger signal
-    if harmonic > 0.4:
+    # Moderate autocorrelation + moderate flatness = probably tonal
+    if autocorr > 0.3 and flatness < 0.3:
         return "tonal"
+
     return "noisy"
 
 
@@ -265,10 +325,10 @@ def classify_type(features):
     slope = features["centroid_slope"]
     freq = features["fundamental_freq"]
     attack = features["attack_time"]
-    harmonic = features["harmonic_ratio"]
     decay = features["decay_time"]
+    autocorr = features["peak_autocorr"]
 
-    is_tonal = harmonic > 0.4 and flatness < 0.3
+    is_tonal = (autocorr > 0.5) or (flatness < 0.15) or (autocorr > 0.3 and flatness < 0.3)
     is_noisy = not is_tonal
     is_percussive = attack < 0.02
     has_strong_slope = abs(slope) > 50
@@ -293,8 +353,8 @@ def classify_type(features):
     if has_strong_slope and duration > 0.15:
         return "sweep"
 
-    # Chime: tonal, high pitch, decaying
-    if is_tonal and freq > 1000 and decay > duration * 0.4:
+    # Chime: tonal, mid-high pitch, decaying envelope
+    if is_tonal and freq > 500 and duration > 0 and decay / duration > 0.4:
         return "chime"
 
     # Beep: tonal fallback
