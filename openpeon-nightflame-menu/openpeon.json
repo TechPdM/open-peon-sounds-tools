@@ -1,0 +1,58 @@
+{
+  "cesp_version": "1.0",
+  "name": "nightflame-menu",
+  "display_name": "Nightflame Menu UI",
+  "version": "1.0.0",
+  "description": "Minimal UI sound effects pack — sweeps, whooshes, and buzzy tones for coding event feedback",
+  "author": { "name": "Mark", "github": "mark" },
+  "license": "CC0-1.0",
+  "language": "en",
+  "tags": ["ui", "minimal", "synth", "menu"],
+  "categories": {
+    "session.start": {
+      "sounds": [
+        {
+          "file": "sounds/menu-fx-01.wav",
+          "label": "Session sweep",
+          "sha256": "bce917941e9a0043f82e260ef2299c81b2ddf4de5a59700b77e592d136b79b51"
+        }
+      ]
+    },
+    "task.acknowledge": {
+      "sounds": [
+        {
+          "file": "sounds/menu-fx-03-ascending.wav",
+          "label": "Ascending tone",
+          "sha256": "970fa64de17c90b3cc5694d85bde13d9a29336936962e5feb544c166c87f1cbd"
+        }
+      ]
+    },
+    "task.complete": {
+      "sounds": [
+        {
+          "file": "sounds/menu-fx-03-normal.wav",
+          "label": "Confirmation tone",
+          "sha256": "083e483633a6b8e8bea77b9a8152a8c643dc9b3585a4ee5a731c2867200e32bf"
+        }
+      ]
+    },
+    "task.error": {
+      "sounds": [
+        {
+          "file": "sounds/menu-fx-03-descending.wav",
+          "label": "Descending tone",
+          "sha256": "7cf3842954b510029cd81f9221ce5ea193f7216cb2429f3cc2ba3e589b6bcf91"
+        }
+      ]
+    },
+    "input.required": {
+      "sounds": [
+        {
+          "file": "sounds/menu-fx-02.wav",
+          "label": "Attention whoosh",
+          "sha256": "881768dc69281945548d193ec3e209a5d48e876b2caf3fd400f7265d8b1860cd"
+        }
+      ]
+    }
+  }
+}
