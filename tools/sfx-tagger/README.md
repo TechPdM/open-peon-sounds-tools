@@ -1,31 +1,184 @@
 # sfx-tagger
 
-A command-line tool that analyses short UI sound effects and tags them by sentiment, duration, loudness, and intensity. Outputs a JSON sidecar file.
+A command-line tool that analyses short UI sound effects and tags them across 8 dimensions. Outputs a JSON sidecar file.
 
 Designed for non-speech UI sounds — clicks, chimes, bleeps, whooshes, error buzzes, etc.
 
+## Architecture
+
+```
+                    ┌─────────────┐
+   WAV files ──────▶│   librosa   │
+                    │  (feature   │
+                    │ extraction) │
+                    └──────┬──────┘
+                           │
+                    raw feature vector
+                    (15 numeric values)
+                           │
+                    ┌──────▼──────┐
+                    │ Rule-based  │
+                    │ classifier  │
+                    │ (thresholds │
+                    │  & scoring) │
+                    └──────┬──────┘
+                           │
+                    8 descriptive tags
+                           │
+                    ┌──────▼──────┐
+                    │  tags.json  │
+                    └─────────────┘
+```
+
+The tool is a single Python script with two stages: **feature extraction** and **classification**. There are no ML models — every decision is a deterministic rule applied to measured audio properties.
+
 ## How it works
 
-Each WAV file is analysed using librosa to extract audio features:
+### Stage 1: Feature extraction
 
-| Feature | What it measures |
+Each WAV file is loaded with librosa and reduced to a vector of numeric features. These are the raw measurements that all 8 tags are derived from.
+
+| Feature | How it's measured | What it tells us |
+|---|---|---|
+| **Duration** | `librosa.get_duration` — total length in seconds | How long the sound is |
+| **RMS loudness** | `librosa.feature.rms` — root-mean-square energy, converted to dB | Average perceived volume |
+| **Crest factor** | Peak amplitude / mean RMS | How "spiky" the waveform is — a sharp click has a high crest factor, a sustained tone has a low one |
+| **Attack time** | Frame index of peak RMS × hop length / sample rate | How quickly the sound reaches full volume — a snap is < 5ms, a swell can be hundreds of ms |
+| **Decay time** | Time from peak RMS frame to the point where RMS drops below -40dB (or end of file) | How long the sound rings out after its peak |
+| **Spectral centroid** | `librosa.feature.spectral_centroid` — the "centre of mass" of the frequency spectrum | Brightness. A low rumble might be 200 Hz, a bright ping 5000+ Hz |
+| **Spectral rolloff** | `librosa.feature.spectral_rolloff` — frequency below which 85% of energy sits | Another brightness measure, less sensitive to outlier harmonics than centroid |
+| **Spectral bandwidth** | `librosa.feature.spectral_bandwidth` — spread of energy around the centroid | Narrow = pure/tonal, wide = complex/noisy |
+| **Spectral flatness** | `librosa.feature.spectral_flatness` — ratio of geometric to arithmetic mean of spectrum | 0.0 = perfectly tonal (sine wave), 1.0 = perfectly flat (white noise) |
+| **Zero-crossing rate** | `librosa.feature.zero_crossing_rate` — how often the waveform crosses zero per frame | Proxy for noisiness/harshness. A clean sine wave crosses rarely, noise crosses constantly |
+| **Centroid slope** | Linear regression over the spectral centroid across all frames | Whether the sound gets brighter (rising = positive slope) or darker (falling = negative slope) over time |
+| **Fundamental frequency** | `librosa.yin` or `librosa.pyin` — pitch tracking | The perceived musical pitch of tonal sounds |
+| **Harmonic ratio** | Energy of `librosa.effects.harmonic(y)` / total energy | How much of the sound is clean harmonic content vs noise |
+| **Onset count** | `librosa.onset.onset_detect` — number of detected note/event onsets | Whether the sound is a single event or a sequence |
+| **RMS envelope shape** | RMS energy over time, analysed for attack/sustain/decay proportions | The temporal "shape" of the sound |
+
+### Stage 2: Classification
+
+Each tag is computed independently by applying rules to the feature vector. No tag depends on any other tag's output.
+
+---
+
+#### Sentiment: `positive` | `negative` | `neutral`
+
+**What it captures:** Whether the sound feels affirming, alarming, or neutral — the emotional valence of the sound.
+
+**How it's measured:** A scoring system based on three features:
+
+- **Spectral centroid** (brightness): Bright sounds (centroid > 3000 Hz) score positive. Dark sounds (< 1500 Hz) score negative. This is the strongest signal — decades of sound design convention associates bright tones with success and dark tones with errors.
+- **Spectral rolloff** (energy distribution): High rolloff (> 6000 Hz) adds a positive half-point. Low rolloff (< 3000 Hz) adds a negative half-point. This catches sounds where the centroid is mid-range but the overall energy skews bright or dark.
+- **Centroid slope** (pitch direction): Rising pitch (slope > 5) scores positive — think of an ascending chime confirming an action. Falling pitch (slope < -5) scores negative — think of a descending buzz indicating failure.
+
+The scores are summed. Total >= 1 = positive, <= -1 = negative, otherwise neutral.
+
+---
+
+#### Duration: `short` | `medium` | `long`
+
+**What it captures:** Perceived length of the sound.
+
+**How it's measured:** Direct comparison of `librosa.get_duration` against two configurable thresholds:
+- Short: < 0.25 seconds (a click, a tap)
+- Long: > 0.8 seconds (a notification, a transition)
+- Medium: everything between
+
+These defaults are tuned for UI sound effects. A game SFX library might need different thresholds.
+
+---
+
+#### Loudness: `quiet` | `medium` | `loud`
+
+**What it captures:** Average perceived volume relative to full-scale.
+
+**How it's measured:** Mean RMS energy is converted to dB (`20 × log10(mean_rms)`). This gives a value roughly analogous to LUFS for short samples. Compared against two configurable thresholds:
+- Quiet: < -28 dB
+- Loud: > -16 dB
+- Medium: between
+
+Note: these are relative to digital full-scale (0 dBFS), not absolute SPL. A "quiet" sound is quiet relative to the maximum possible level in the file.
+
+---
+
+#### Intensity: `soft` | `medium` | `intense`
+
+**What it captures:** How aggressive or punchy the sound feels — distinct from loudness. A sound can be quiet but intense (a sharp, thin click) or loud but soft (a warm pad swell).
+
+**How it's measured:** A composite score from three features, each contributing +1 or -1:
+
+- **Crest factor** (> 8 = intense, < 4 = soft): High crest factor means sharp transients relative to the average level — the sound "pokes out" of the waveform.
+- **Attack time** (< 20ms = intense, > 100ms = soft): Fast attacks feel snappy and aggressive. Slow attacks feel gentle.
+- **Zero-crossing rate** (> 0.15 = intense, < 0.05 = soft): High ZCR means the waveform is jagged and buzzy. Low ZCR means it's smooth.
+
+Score >= 1.5 = intense, <= -1.5 = soft, otherwise medium.
+
+---
+
+#### Pitch: `low` | `mid` | `high`
+
+**What it captures:** The perceived pitch register of the sound.
+
+**How it's measured:** For tonal sounds, `librosa.pyin` estimates the fundamental frequency — the actual musical pitch. For noisy sounds where pitch tracking fails, the spectral centroid is used as a fallback (it correlates well with perceived pitch for broadband sounds).
+
+The frequency is mapped to perceptual bands:
+- Low: < 300 Hz — thuds, rumbles, bass tones
+- Mid: 300–2000 Hz — most UI bleeps, notification tones
+- High: > 2000 Hz — bright pings, clicks, sparkles
+
+These bands roughly correspond to how the human ear groups sounds by register. The 300 Hz boundary sits just above typical "bass" content, and 2000 Hz is where sounds start to feel distinctly "bright" or "treble".
+
+---
+
+#### Envelope: `percussive` | `sustained` | `swelling` | `decaying`
+
+**What it captures:** The temporal shape of the sound — how its energy evolves over time.
+
+**How it's measured:** The RMS energy curve is analysed in three phases:
+
+1. **Attack phase**: from onset to peak RMS. Measured as a proportion of total duration.
+2. **Sustain phase**: the portion where RMS stays within a threshold of the peak (e.g. within 6 dB).
+3. **Decay phase**: from end of sustain to silence (or end of file).
+
+Classification rules:
+- **Percussive**: attack < 20ms AND decay < 60% of duration — the energy appears and disappears quickly (clicks, taps, hits)
+- **Swelling**: attack > 50% of duration — the sound spends most of its time getting louder (power-ups, build-ups, risers)
+- **Decaying**: attack < 20% of duration AND decay > 60% of duration — quick onset followed by a long ring-out (chimes, bells, pings, reverb tails)
+- **Sustained**: everything else — relatively flat energy throughout (drones, held tones, loops)
+
+---
+
+#### Tonality: `tonal` | `noisy`
+
+**What it captures:** Whether the sound has a clear pitch or is more like filtered noise/texture.
+
+**How it's measured:** Two complementary features are combined:
+
+- **Harmonic ratio**: The audio is decomposed into harmonic and percussive components using `librosa.effects.harmonic`. The ratio of harmonic energy to total energy indicates how much "clean pitch" is present. A pure sine wave approaches 1.0, white noise approaches 0.0.
+- **Spectral flatness**: Measures how "flat" the frequency spectrum is. A perfectly flat spectrum (all frequencies equally loud = noise) gives 1.0. A spectrum with sharp peaks (= tonal content) gives close to 0.0.
+
+These two measures are complementary — harmonic ratio works from the time domain, spectral flatness from the frequency domain. Both agreeing gives high confidence. The sound is classified as **tonal** if harmonic ratio is high and spectral flatness is low, and **noisy** otherwise.
+
+---
+
+#### Type: `click` | `beep` | `chime` | `whoosh` | `buzz` | `thud` | `sweep`
+
+**What it captures:** A perceptual category label — what a human would call this kind of sound.
+
+**How it's measured:** This is the most heuristic-heavy classifier. It uses combinations of features from the other dimensions rather than its own dedicated measurement. Rules are evaluated in priority order (first match wins):
+
+| Type | Rule |
 |---|---|
-| Spectral centroid | Brightness — higher = brighter/more positive |
-| Spectral rolloff | Energy distribution — higher = brighter |
-| Centroid slope | Pitch direction over time — rising = positive, falling = negative |
-| RMS loudness | Average volume in dB |
-| Crest factor | Peak-to-average ratio — higher = sharper transient |
-| Attack time | Time to peak loudness — faster = more intense |
-| Zero-crossing rate | Signal harshness — higher = buzzier/more intense |
+| **Click** | Duration < 50ms, percussive envelope, high spectral flatness (broadband) |
+| **Thud** | Percussive envelope, low pitch (< 300 Hz), dark (low centroid) |
+| **Buzz** | Noisy tonality, sustained envelope, high ZCR, mid-low pitch |
+| **Whoosh** | Noisy tonality, strong centroid slope (rising or falling), medium-long duration |
+| **Sweep** | Strong centroid slope, tonal or noisy, medium-long duration |
+| **Chime** | Tonal, high pitch, decaying envelope |
+| **Beep** | Tonal, short-medium duration (fallback for tonal sounds that don't match chime) |
 
-These features are fed into a rule-based classifier that produces four tags per file:
-
-| Tag | Values |
-|---|---|
-| Sentiment | `positive`, `negative`, `neutral` |
-| Duration | `short`, `medium`, `long` |
-| Loudness | `quiet`, `medium`, `loud` |
-| Intensity | `soft`, `medium`, `intense` |
+The ordering matters — a very short broadband transient is a click before it could be a thud, and a tonal decaying sound is a chime before it could be a beep. This priority chain handles the overlapping feature spaces between types.
 
 ## Installation
 
@@ -63,13 +216,21 @@ python3 tools/sfx-tagger/sfx_tagger.py ./sounds/*.wav \
     "sentiment": "positive",
     "duration": "short",
     "loudness": "quiet",
-    "intensity": "soft"
+    "intensity": "soft",
+    "pitch": "high",
+    "envelope": "percussive",
+    "tonality": "tonal",
+    "type": "click"
   },
   "error_buzz.wav": {
     "sentiment": "negative",
     "duration": "short",
     "loudness": "loud",
-    "intensity": "intense"
+    "intensity": "intense",
+    "pitch": "mid",
+    "envelope": "sustained",
+    "tonality": "noisy",
+    "type": "buzz"
   }
 }
 ```
@@ -83,17 +244,27 @@ With `--verbose`, each entry also includes the raw feature values used for class
       "sentiment": "positive",
       "duration": "short",
       "loudness": "quiet",
-      "intensity": "soft"
+      "intensity": "soft",
+      "pitch": "high",
+      "envelope": "percussive",
+      "tonality": "tonal",
+      "type": "click"
     },
     "features": {
       "duration": 0.13,
       "rms_db": -31.5,
       "crest_factor": 14.0,
       "attack_time": 0.01,
+      "decay_time": 0.08,
       "spectral_centroid": 4200.0,
       "spectral_rolloff": 7500.0,
+      "spectral_bandwidth": 2100.0,
+      "spectral_flatness": 0.02,
       "zcr": 0.18,
-      "centroid_slope": 120.5
+      "centroid_slope": 120.5,
+      "fundamental_freq": 4400.0,
+      "harmonic_ratio": 0.85,
+      "onset_count": 1
     }
   }
 }
@@ -114,4 +285,5 @@ With `--verbose`, each entry also includes the raw feature values used for class
 
 - WAV files only (MP3 and other formats are not supported)
 - Sentiment classification is tuned for non-speech UI sounds — results on voice clips or music will not be meaningful
+- Sound type classification is heuristic and priority-ordered — edge cases between categories (e.g. a very short chime vs a beep) may not always match human intuition
 - Thresholds are hand-tuned defaults; different sound libraries may need adjustment

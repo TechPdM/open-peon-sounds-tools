@@ -2,7 +2,7 @@
 
 ## Goal
 
-A Python CLI that analyses short audio UI sound effect files and outputs a JSON sidecar with descriptive tags: positive/negative/neutral, short/long, loud/quiet, soft/intense.
+A Python CLI that analyses short audio UI sound effect files and outputs a JSON sidecar with descriptive tags across 8 dimensions: sentiment, duration, loudness, intensity, pitch register, envelope shape, tonality, and sound type.
 
 ## Scope
 
@@ -32,6 +32,13 @@ For each file, compute:
 | Spectral rolloff | `librosa.feature.spectral_rolloff` | positive / negative |
 | Zero-crossing rate | `librosa.feature.zero_crossing_rate` | soft / intense |
 | Pitch direction | Centroid slope over time (linear regression) | positive / negative |
+| Fundamental frequency | `librosa.yin` or `librosa.pyin` | pitch register |
+| Harmonic-to-noise ratio | Harmonic energy / total energy via `librosa.effects.harmonic` | tonality |
+| Spectral flatness | `librosa.feature.spectral_flatness` | tonality |
+| RMS envelope shape | RMS over time: attack/sustain/release curve analysis | envelope |
+| Onset count | `librosa.onset.onset_detect` | sound type |
+| Spectral bandwidth | `librosa.feature.spectral_bandwidth` | sound type |
+| Decay time | Time from peak RMS to silence (e.g. -40dB) | envelope, sound type |
 
 ### Rule-based classification
 
@@ -48,6 +55,34 @@ This replaces speech-to-text/sentiment — for non-speech UI sounds, spectral br
 
 **Intensity:** composite of crest factor, attack time, and zero-crossing rate
 
+**Pitch register (low / mid / high):**
+Based on the dominant fundamental frequency or spectral centroid mapped to perceptual bands:
+- **Low**: < 300 Hz — thuds, rumbles, bass tones
+- **Mid**: 300–2000 Hz — most UI bleeps and chimes
+- **High**: > 2000 Hz — bright pings, clicks, sparkles
+
+**Envelope shape (percussive / sustained / swelling / decaying):**
+Derived from the RMS energy curve over time:
+- **Percussive**: fast attack (< 20ms), short sustain, fast decay — clicks, taps, hits
+- **Sustained**: relatively flat RMS throughout the sound's duration
+- **Swelling**: RMS rises over time (attack time > 50% of duration) — power-ups, build-ups
+- **Decaying**: fast attack followed by a long tail (decay > 60% of duration) — chimes, bells, pings
+
+**Tonality (tonal / noisy):**
+Composite of harmonic-to-noise ratio and spectral flatness:
+- **Tonal**: strong harmonic content, low spectral flatness — clean beeps, chimes, melodic tones
+- **Noisy**: weak harmonics, high spectral flatness — static, whooshes, buzzes, texture
+
+**Sound type (click / beep / chime / whoosh / buzz / thud / sweep):**
+Heuristic classification combining multiple features:
+- **Click**: very short (< 50ms), percussive, broadband (high spectral flatness)
+- **Beep**: short, tonal, mid-high pitch, percussive or sustained
+- **Chime**: tonal, high pitch, decaying envelope, resonant
+- **Whoosh**: noisy, sustained or swelling, rising or falling centroid slope
+- **Buzz**: noisy, sustained, harsh (high ZCR), mid-low pitch
+- **Thud**: percussive, low pitch, dark (low centroid), short decay
+- **Sweep**: tonal or noisy, strong centroid slope (rising or falling), medium-long duration
+
 ## CLI interface
 
 ```bash
@@ -63,17 +98,38 @@ python3 tools/sfx-tagger/sfx_tagger.py ./sounds/*.wav \
 
 ```json
 {
-  "click_ok_01.wav": ["positive", "short", "quiet", "soft"],
-  "error_buzz_02.wav": ["negative", "short", "loud", "intense"],
-  "panel_open_01.wav": ["neutral", "long", "medium", "soft"]
+  "click_ok_01.wav": {
+    "sentiment": "positive",
+    "duration": "short",
+    "loudness": "quiet",
+    "intensity": "soft",
+    "pitch": "high",
+    "envelope": "percussive",
+    "tonality": "tonal",
+    "type": "click"
+  },
+  "error_buzz_02.wav": {
+    "sentiment": "negative",
+    "duration": "short",
+    "loudness": "loud",
+    "intensity": "intense",
+    "pitch": "mid",
+    "envelope": "sustained",
+    "tonality": "noisy",
+    "type": "buzz"
+  }
 }
 ```
 
-Each file gets exactly 4 tags:
+Each file gets exactly 8 tags:
 1. Sentiment: `positive` | `negative` | `neutral`
 2. Duration: `short` | `medium` | `long`
 3. Loudness: `quiet` | `medium` | `loud`
 4. Intensity: `soft` | `medium` | `intense`
+5. Pitch: `low` | `mid` | `high`
+6. Envelope: `percussive` | `sustained` | `swelling` | `decaying`
+7. Tonality: `tonal` | `noisy`
+8. Type: `click` | `beep` | `chime` | `whoosh` | `buzz` | `thud` | `sweep`
 
 ## File structure
 
