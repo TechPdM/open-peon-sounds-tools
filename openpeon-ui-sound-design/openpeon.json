@@ -1,0 +1,58 @@
+{
+  "cesp_version": "1.0",
+  "name": "ui-sound-design",
+  "display_name": "UI Sound Design",
+  "version": "1.0.0",
+  "description": "Designed UI sound effects — whooshes, beeps, sweeps, and thuds for coding events",
+  "author": { "name": "Mark", "github": "mark" },
+  "license": "CC-BY-4.0",
+  "language": "en",
+  "tags": ["ui", "designed", "whoosh", "synth", "futuristic"],
+  "categories": {
+    "session.start": {
+      "sounds": [
+        { "file": "sounds/ui-sound-9.wav", "label": "Swelling whoosh", "sha256": "01ba4bac64d48867c0c31cdbbdcbca487b890e5aaae9989cf3f8d81e6a6dcd96" },
+        { "file": "sounds/ui-sound-4.wav", "label": "Intense whoosh", "sha256": "d450abcd7d372f79eb8be669bdd07279a6e91e5bd831266974bc7267634938f5" }
+      ]
+    },
+    "task.acknowledge": {
+      "sounds": [
+        { "file": "sounds/ui-sound-1.wav", "label": "Short buzz", "sha256": "c4147f4b171096b941c8e941c2de83951cf19eee1bcdbf30da8409fb2849ab62" },
+        { "file": "sounds/ui-sound-3.wav", "label": "Decaying beep", "sha256": "588b92a4b50be62fc70478f36b42775586392d333fd759d05a9502aa1416fbf2" }
+      ]
+    },
+    "task.complete": {
+      "sounds": [
+        { "file": "sounds/ui-sound-5.wav", "label": "Positive whoosh", "sha256": "89e070287d90d22e9ddc14280a13964cf1ac0891b316d5f4408fb6a66663d2b1" },
+        { "file": "sounds/ui-sound-12.wav", "label": "Neutral beep", "sha256": "46060c74a68aea88c51d69db8d140f3c9bcd3bb646a97b985bff481046f1dbdd" }
+      ]
+    },
+    "task.error": {
+      "sounds": [
+        { "file": "sounds/ui-sound-2.wav", "label": "Low thud", "sha256": "3cf281a83ceef8e94cf90e01a040c82d9d793a091909e789d5d430b5870b145f" },
+        { "file": "sounds/ui-sound-11.wav", "label": "Negative beep", "sha256": "80022955c976ac8a6ac1d3e69ae4b33c0a41612b9a688638c5271fd5e3baa26e" },
+        { "file": "sounds/ui-sound-10.wav", "label": "High negative whoosh", "sha256": "f278cf7c858a347b72fb0911fab348cd780b769deff7503b01252fd973ecc0df" }
+      ]
+    },
+    "input.required": {
+      "sounds": [
+        { "file": "sounds/ui-sound-6.wav", "label": "High whoosh", "sha256": "bc2556b285e85208eeb25595a626da264954526b72de99170d75aa017020131c" },
+        { "file": "sounds/ui-sound-14.wav", "label": "Long high beep", "sha256": "8abd0a2a0806469b3f631dbc15b2e29b79542a339f28235ec80822820b7fbd8e" }
+      ]
+    },
+    "resource.limit": {
+      "sounds": [
+        { "file": "sounds/ui-sound-16.wav", "label": "Warning sweep", "sha256": "5beac942494dfe198e0e6e0842225b8168ecec7b6d905fed91a799fdae8a7fb7" },
+        { "file": "sounds/ui-sound-17.wav", "label": "Low warning tone", "sha256": "fb584b2971b49ba40292fffcd35cdfb3bd905eb421d63b94fafd293b6ca475e2" }
+      ]
+    },
+    "user.spam": {
+      "sounds": [
+        { "file": "sounds/ui-sound-7.wav", "label": "Low buzz", "sha256": "4d037d5e9fab97322c9de99904d40e63e2d9099ed13f18cc264d5e6e4159f68e" },
+        { "file": "sounds/ui-sound-8.wav", "label": "Dismissive whoosh", "sha256": "07fbfae055bfc34e7a0683d13db8b6938f62657835bf28e56146ee8a2b952df1" },
+        { "file": "sounds/ui-sound-13.wav", "label": "Negative whoosh", "sha256": "5150c6691f4bfa0222063950a6fd8c69dc6eae11eb3168b299a11f6b2c0aef15" },
+        { "file": "sounds/ui-sound-15.wav", "label": "Long low beep", "sha256": "1c260c82683daeffd6d47d78177272c51cf3a215457847c35aef7b31e5a6239c" }
+      ]
+    }
+  }
+}
