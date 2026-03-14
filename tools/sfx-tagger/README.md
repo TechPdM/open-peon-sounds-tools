@@ -44,15 +44,16 @@ Each WAV file is loaded with librosa and reduced to a vector of numeric features
 | **RMS loudness** | `librosa.feature.rms` — root-mean-square energy, converted to dB | Average perceived volume |
 | **Crest factor** | Peak amplitude / mean RMS | How "spiky" the waveform is — a sharp click has a high crest factor, a sustained tone has a low one |
 | **Attack time** | Frame index of peak RMS × hop length / sample rate | How quickly the sound reaches full volume — a snap is < 5ms, a swell can be hundreds of ms |
-| **Decay time** | Time from peak RMS frame to the point where RMS drops below -40dB (or end of file) | How long the sound rings out after its peak |
+| **Decay time** | Time from peak RMS to where RMS drops to 10% of peak (relative threshold, not absolute) | How long the sound rings out after its peak. Uses a relative threshold to handle quiet sounds correctly |
 | **Spectral centroid** | `librosa.feature.spectral_centroid` — the "centre of mass" of the frequency spectrum | Brightness. A low rumble might be 200 Hz, a bright ping 5000+ Hz |
 | **Spectral rolloff** | `librosa.feature.spectral_rolloff` — frequency below which 85% of energy sits | Another brightness measure, less sensitive to outlier harmonics than centroid |
 | **Spectral bandwidth** | `librosa.feature.spectral_bandwidth` — spread of energy around the centroid | Narrow = pure/tonal, wide = complex/noisy |
 | **Spectral flatness** | `librosa.feature.spectral_flatness` — ratio of geometric to arithmetic mean of spectrum | 0.0 = perfectly tonal (sine wave), 1.0 = perfectly flat (white noise) |
 | **Zero-crossing rate** | `librosa.feature.zero_crossing_rate` — how often the waveform crosses zero per frame | Proxy for noisiness/harshness. A clean sine wave crosses rarely, noise crosses constantly |
-| **Centroid slope** | Linear regression over the spectral centroid across all frames | Whether the sound gets brighter (rising = positive slope) or darker (falling = negative slope) over time |
-| **Fundamental frequency** | `librosa.yin` or `librosa.pyin` — pitch tracking | The perceived musical pitch of tonal sounds |
-| **Harmonic ratio** | Energy of `librosa.effects.harmonic(y)` / total energy | How much of the sound is clean harmonic content vs noise |
+| **Centroid slope** | Linear regression over the spectral centroid across active (non-silent) frames only | Whether the sound gets brighter (rising = positive slope) or darker (falling = negative slope) over time. Silent tail frames are excluded to avoid skewing the slope negative |
+| **Fundamental frequency** | `librosa.pyin` (fmin=80Hz, fmax=4000Hz) with spectral centroid as fallback | The perceived musical pitch of tonal sounds. Falls back to centroid for noisy/unpitched sounds. Short signals (< 2048 samples) use centroid directly |
+| **Harmonic ratio** | Energy of `librosa.effects.harmonic(y)` / total energy | How much of the sound is clean harmonic content vs noise (HPSS-based) |
+| **Peak autocorrelation** | `librosa.autocorrelate` — normalised peak of the autocorrelation function after lag 0 | How periodic/repetitive the signal is. Catches tonal synthesised sounds that HPSS misclassifies. A pure tone approaches 1.0, noise approaches 0.0 |
 | **Onset count** | `librosa.onset.onset_detect` — number of detected note/event onsets | Whether the sound is a single event or a sequence |
 | **RMS envelope shape** | RMS energy over time, analysed for attack/sustain/decay proportions | The temporal "shape" of the sound |
 
@@ -155,10 +156,11 @@ Classification rules:
 
 **How it's measured:** Two complementary features are combined:
 
-- **Harmonic ratio**: The audio is decomposed into harmonic and percussive components using `librosa.effects.harmonic`. The ratio of harmonic energy to total energy indicates how much "clean pitch" is present. A pure sine wave approaches 1.0, white noise approaches 0.0.
+- **Autocorrelation periodicity**: The signal is autocorrelated and the strongest peak after lag 0 is measured. A periodic signal (tonal) produces a strong peak approaching 1.0; aperiodic noise stays near 0.0. This is the primary tonality signal because it reliably detects synthesised tones that HPSS-based harmonic separation misclassifies.
 - **Spectral flatness**: Measures how "flat" the frequency spectrum is. A perfectly flat spectrum (all frequencies equally loud = noise) gives 1.0. A spectrum with sharp peaks (= tonal content) gives close to 0.0.
+- **Harmonic ratio** (HPSS): The audio is decomposed into harmonic and percussive components using `librosa.effects.harmonic`. Used as a secondary signal when autocorrelation and flatness are ambiguous.
 
-These two measures are complementary — harmonic ratio works from the time domain, spectral flatness from the frequency domain. Both agreeing gives high confidence. The sound is classified as **tonal** if harmonic ratio is high and spectral flatness is low, and **noisy** otherwise.
+These three measures are complementary — autocorrelation works in the time domain, spectral flatness in the frequency domain, and HPSS uses a spectrogram decomposition. The sound is classified as **tonal** if autocorrelation is strong (> 0.5), or spectral flatness is low (< 0.15), or autocorrelation and flatness both suggest tonality. It is **noisy** if spectral flatness is high (> 0.5) or none of the tonal conditions are met.
 
 ---
 
@@ -264,6 +266,7 @@ With `--verbose`, each entry also includes the raw feature values used for class
       "centroid_slope": 120.5,
       "fundamental_freq": 4400.0,
       "harmonic_ratio": 0.85,
+      "peak_autocorr": 0.92,
       "onset_count": 1
     }
   }
@@ -280,6 +283,29 @@ With `--verbose`, each entry also includes the raw feature values used for class
 | `--loud-threshold` | `-16` | RMS dB above which a sound is tagged "loud" |
 | `--quiet-threshold` | `-28` | RMS dB below which a sound is tagged "quiet" |
 | `--verbose`, `-v` | off | Include raw feature values in output |
+
+## Reviewing results
+
+The interactive review tool lets you listen to each sound, see its tags, and correct any misclassifications:
+
+```bash
+# Review all sounds in a pack
+python3 tools/sfx-tagger/review.py path/to/tags.json
+
+# Review only sounds with a specific tag
+python3 tools/sfx-tagger/review.py path/to/tags.json --filter sentiment=neutral
+python3 tools/sfx-tagger/review.py path/to/tags.json --filter type=buzz
+```
+
+For each sound, the tool displays the current tags (with all options shown), plays the audio, and waits for input:
+
+- **Enter** or **`a`** — accept the tags as-is
+- **`r`** — replay the sound
+- **`s`** — skip (leave unchanged)
+- **`<field> <value>`** — change a tag (e.g. `sentiment positive`, or abbreviated: `sen pos`)
+- **Ctrl+C** — quit and save any changes made so far
+
+Corrections are written back to the same `tags.json` file.
 
 ## Limitations
 
