@@ -5,8 +5,8 @@
   "version": "1.0.0",
   "description": "Simple, cute UI/UX interface sounds \u2014 light and playful coding event feedback",
   "author": {
-    "name": "Mark",
-    "github": "mark"
+    "name": "Mark Chitty",
+    "github": "TechPdM"
   },
   "license": "CC0-1.0",
   "language": "en",
@@ -32,7 +32,8 @@
         {
           "file": "sounds/cancel-sound.wav",
           "label": "Cancel",
-          "sha256": "382173d7edbbee9e1fcfeb79300a04ba6c667b9206b5433d9f3a804281facd58"        }
+          "sha256": "382173d7edbbee9e1fcfeb79300a04ba6c667b9206b5433d9f3a804281facd58"
+        }
       ]
     },
     "task.error": {

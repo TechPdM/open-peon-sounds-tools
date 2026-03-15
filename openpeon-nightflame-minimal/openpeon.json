@@ -5,8 +5,8 @@
   "version": "1.0.0",
   "description": "Minimal UI sound effects pack \u2014 sweeps, whooshes, and buzzy tones for coding event feedback",
   "author": {
-    "name": "Mark",
-    "github": "mark"
+    "name": "Mark Chitty",
+    "github": "TechPdM"
   },
   "license": "CC0-1.0",
   "language": "en",
@@ -79,6 +79,6 @@
           "sha256": "0468abfe5832e95f43a7504da3ec26fb430656e595af45bba072ca599a3708c5"
         }
       ]
-    } 
+    }
   }
 }

@@ -5,8 +5,8 @@
   "version": "1.0.0",
   "description": "Soft, dreamy tonal beeps \u2014 gentle and unobtrusive coding event sounds",
   "author": {
-    "name": "Mark",
-    "github": "mark"
+    "name": "Mark Chitty",
+    "github": "TechPdM"
   },
   "license": "CC0-1.0",
   "language": "en",
@@ -80,6 +80,6 @@
           "sha256": "decc6075cedb970cbe43eb5f5d11c4df0577833e327feed9dbec4a78de8a0833"
         }
       ]
-    }    
+    }
   }
 }
