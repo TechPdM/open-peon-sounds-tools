@@ -42,15 +42,10 @@
           "file": "sounds/soft-dreamy-beep.wav",
           "label": "Soft dreamy beep",
           "sha256": "58f91213b3c83a5c5676d7f8aaf4c72ef55f8987606a5d1f18d4a3d0951a5840"
-        },
-        {
-          "file": "sounds/positive-blip-effect.wav",
-          "label": "Positive blip",
-          "sha256": "af400937c35a1aed0f701a8a3089da7b6c00b52499bc32943549fd847e261c00"
         }
       ]
     },
-    "input.required": {
+    "task.error": {
       "sounds": [
         {
           "file": "sounds/menu-beep.wav",
@@ -58,6 +53,33 @@
           "sha256": "8eac125ba017c2e78650394d2d2fc61561cf1b3f09c1755a7046f8ade2260010"
         }
       ]
-    }
+    },
+    "input.required": {
+      "sounds": [
+        {
+          "file": "sounds/positive-blip-effect.wav",
+          "label": "Positive blip",
+          "sha256": "af400937c35a1aed0f701a8a3089da7b6c00b52499bc32943549fd847e261c00"
+        }
+      ]
+    },
+    "resource.limit": {
+      "sounds": [
+        {
+          "file": "sounds/menu-beep-low.wav",
+          "label": "Menu beep (low)",
+          "sha256": "0a231fa48df080a675572259659b5c1020505d697c860e5ac8f910bc245ecd35"
+        }
+      ]
+    },
+    "user.spam": {
+      "sounds": [
+        {
+          "file": "sounds/soft-dreamy-beep-low.wav",
+          "label": "Soft dreamy beep (low)",
+          "sha256": "decc6075cedb970cbe43eb5f5d11c4df0577833e327feed9dbec4a78de8a0833"
+        }
+      ]
+    }    
   }
 }
