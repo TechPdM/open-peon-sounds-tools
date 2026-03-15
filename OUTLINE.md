@@ -1,6 +1,8 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# Outline
 
-# whats best way to categorise short audio UI sound effect samples with a view to tagging them as; positive, negative, neutral, short, long, soft, intense, loud, quiet etc. ideally a command line tool i can integrate into a workflow
+## Prompt
+
+whats best way to categorise short audio UI sound effect samples with a view to tagging them as; positive, negative, neutral, short, long, soft, intense, loud, quiet etc. ideally a command line tool i can integrate into a workflow
 
 You’ll probably get the best results by combining very simple signal‑analysis features (duration, loudness, envelope) with a tiny bit of custom logic, wrapped in a CLI script that writes tags into JSON or metadata.
 
