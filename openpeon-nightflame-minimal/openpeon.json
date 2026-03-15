@@ -20,18 +20,18 @@
     "session.start": {
       "sounds": [
         {
-          "file": "sounds/menu-fx-01.wav",
-          "label": "Session sweep",
-          "sha256": "bce917941e9a0043f82e260ef2299c81b2ddf4de5a59700b77e592d136b79b51"
+          "file": "sounds/menu-fx-02.wav",
+          "label": "Attention whoosh",
+          "sha256": "881768dc69281945548d193ec3e209a5d48e876b2caf3fd400f7265d8b1860cd"
         }
       ]
     },
     "task.acknowledge": {
       "sounds": [
         {
-          "file": "sounds/menu-fx-03-ascending.wav",
-          "label": "Ascending tone",
-          "sha256": "970fa64de17c90b3cc5694d85bde13d9a29336936962e5feb544c166c87f1cbd"
+          "file": "sounds/menu-fx-02-low.wav",
+          "label": "Attention whoosh (low)",
+          "sha256": "ba273aa036441fea34480345134a36f66becbf72dec5f3c10ef1ba462eb9af35"
         }
       ]
     },
@@ -56,11 +56,29 @@
     "input.required": {
       "sounds": [
         {
-          "file": "sounds/menu-fx-02.wav",
-          "label": "Attention whoosh",
-          "sha256": "881768dc69281945548d193ec3e209a5d48e876b2caf3fd400f7265d8b1860cd"
+          "file": "sounds/menu-fx-01.wav",
+          "label": "Session sweep",
+          "sha256": "bce917941e9a0043f82e260ef2299c81b2ddf4de5a59700b77e592d136b79b51"
         }
       ]
-    }
+    },
+    "resource.limit": {
+      "sounds": [
+        {
+          "file": "sounds/menu-fx-03-ascending.wav",
+          "label": "Ascending tone",
+          "sha256": "970fa64de17c90b3cc5694d85bde13d9a29336936962e5feb544c166c87f1cbd"
+        }
+      ]
+    },
+    "user.spam": {
+      "sounds": [
+        {
+          "file": "sounds/menu-fx-01-low.wav",
+          "label": "Session sweep (low)",
+          "sha256": "0468abfe5832e95f43a7504da3ec26fb430656e595af45bba072ca599a3708c5"
+        }
+      ]
+    } 
   }
 }
