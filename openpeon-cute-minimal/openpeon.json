@@ -30,18 +30,17 @@
     "task.complete": {
       "sounds": [
         {
-          "file": "sounds/confirm-sound.wav",
-          "label": "Confirm",
-          "sha256": "c8367d3db66e746d866e9521231c4aabe6187a77d65cefe845b0c799186e1727"
-        }
+          "file": "sounds/cancel-sound.wav",
+          "label": "Cancel",
+          "sha256": "382173d7edbbee9e1fcfeb79300a04ba6c667b9206b5433d9f3a804281facd58"        }
       ]
     },
     "task.error": {
       "sounds": [
         {
-          "file": "sounds/cancel-sound.wav",
-          "label": "Cancel",
-          "sha256": "382173d7edbbee9e1fcfeb79300a04ba6c667b9206b5433d9f3a804281facd58"
+          "file": "sounds/cancel-sound-low.wav",
+          "label": "Cancel (low)",
+          "sha256": "f0ef9f350ba397162ad37d751bc4e32411ae8f5bab247f2033f1775464b8484c"
         }
       ]
     },
@@ -51,6 +50,33 @@
           "file": "sounds/hover-sound.wav",
           "label": "Hover",
           "sha256": "ad2edf855d7b94a32ad0d1a8501d90c2e0ef7181809a4d0dc16b43224a9c78f3"
+        }
+      ]
+    },
+    "task.acknowledge": {
+      "sounds": [
+        {
+          "file": "sounds/confirm-sound.wav",
+          "label": "Confirm",
+          "sha256": "c8367d3db66e746d866e9521231c4aabe6187a77d65cefe845b0c799186e1727"
+        }
+      ]
+    },
+    "resource.limit": {
+      "sounds": [
+        {
+          "file": "sounds/pause-sound-low.wav",
+          "label": "Pause (low)",
+          "sha256": "0dd86df15b739da4871b157299eacb0efaf497f8f073c69f6bea0cdd46daa2e8"
+        }
+      ]
+    },
+    "user.spam": {
+      "sounds": [
+        {
+          "file": "sounds/hover-sound-low.wav",
+          "label": "Hover (low)",
+          "sha256": "d2b46e0dc73265b0216994a634948d987e7ff58e8f38c64b07d46ca78dcb880a"
         }
       ]
     }
