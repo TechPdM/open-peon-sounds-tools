@@ -1,164 +1,108 @@
 # PeonPing
 
-Tools and sound packs for [OpenPeon](https://github.com/PeonPing/openpeon) — audio feedback for coding tools.
+Sound packs and tools for [PeonPing](https://github.com/PeonPing/peon-ping) — audio feedback notifications for coding tools like Claude Code.
 
-## What's in this repo
+PeonPing plays short sound effects when coding events happen: a task completes, an error occurs, input is needed, or a session starts. Sound packs define which sounds play for each event.
 
-- **`openpeon-classic/`** — A Worms-style voice pack (ready to use)
-- **`tools/sfx-tagger/`** — CLI tool for analysing and tagging UI sound effects
-- **`samples/`** — Source audio samples (gitignored)
+## Sound packs
 
-## Creating a Sound Pack
+Packs in this repo follow the [OpenPeon](https://github.com/PeonPing/openpeon) format and the [CESP v1.0 spec](https://github.com/PeonPing/openpeon/blob/main/spec/cesp-v1.md).
 
-An OpenPeon sound pack is a directory containing an `openpeon.json` manifest and a `sounds/` folder. Packs follow the [CESP v1.0 spec](https://github.com/PeonPing/openpeon/blob/main/spec/cesp-v1.md).
+| Pack | Style | Sounds | Categories | License |
+|---|---|---|---|---|
+| [cute-minimal](openpeon-cute-minimal/) | Light, playful UI beeps | 4 | 4 | CC0 |
+| [dreamy-minimal](openpeon-dreamy-minimal/) | Soft, warm tonal beeps | 5 | 4 | CC0 |
+| [nightflame-minimal](openpeon-nightflame-minimal/) | Minimal sweeps and tones | 5 | 4 | CC0 |
+| [modern-varied](openpeon-modern-varied/) | Cyberpunk synth UI effects | 28 | 7 | CC0 |
+| [nezuai-varied](openpeon-nezuai-varied/) | Designed whooshes, beeps, thuds | 17 | 7 | CC-BY-4.0 |
+| [worms-classic-varied](openpeon-worms-classic-varied/) | Worms game voice clips | 53 | 7 | CC-BY-NC-4.0 |
 
-### Directory structure
+### Installing a pack
+
+Symlink the pack directory into `~/.openpeon/packs/`:
+
+```bash
+ln -s /path/to/openpeon-cute-minimal ~/.openpeon/packs/cute-minimal
+```
+
+Then set it as the active pack in your PeonPing config, or use `/peon-ping-use cute-minimal` in Claude Code.
+
+## CESP v1.0 overview
+
+The [Coding Event Sound Pack](https://github.com/PeonPing/openpeon/blob/main/spec/cesp-v1.md) specification defines how sound packs are structured. Key requirements:
+
+### Manifest (`openpeon.json`)
+
+Every pack has an `openpeon.json` at its root with:
+
+- `cesp_version` — must be `"1.0"`
+- `name` — lowercase alphanumeric with hyphens/underscores, 1-64 chars
+- `display_name` — human-readable name
+- `version` — semver (e.g. `1.0.0`)
+- `categories` — maps event categories to arrays of sound entries
+- `author`, `license`, `description`, `tags` — recommended for registry submission
+- `sha256` on each sound entry — required for registry submission
+
+### Event categories
+
+Packs map sounds to these categories. The player picks a random sound from the category when the event fires.
+
+| Category | When it fires |
+|---|---|
+| `session.start` | IDE opens, agent connects |
+| `task.acknowledge` | Command accepted, build starting |
+| `task.complete` | Build done, test passed, task finished |
+| `task.error` | Build failure, crash, test failure |
+| `input.required` | Waiting for user approval or input |
+| `resource.limit` | Rate limit, token limit, quota hit |
+| `user.spam` | User sending commands too rapidly |
+
+At least one core category (`session.start` through `resource.limit`) must have sounds.
+
+### Audio constraints
+
+- **Formats**: WAV, MP3, or OGG Vorbis
+- **Max file size**: 1 MB per file
+- **Max pack size**: 50 MB total
+- **Filenames**: alphanumeric, dots, underscores, hyphens only — no spaces or Unicode
+- **Recommended**: 44.1 kHz, 16-bit
+
+### Pack structure
 
 ```
 my-pack/
   openpeon.json       # manifest (required)
   sounds/             # audio files (required)
-    Hello.mp3
-    Error.wav
-    ...
-  icons/              # icon files (optional)
-    pack.png
-  README.md           # pack description (optional)
-  LICENSE             # license file (optional)
+  icons/              # icon files (optional, PNG/JPEG/WebP/SVG, max 500KB)
+  README.md           # description (optional)
+  LICENSE             # license (optional)
 ```
 
-### The manifest
+See the [full CESP v1.0 spec](https://github.com/PeonPing/openpeon/blob/main/spec/cesp-v1.md) for complete details.
 
-`openpeon.json` maps your sounds to CESP event categories. Here's a minimal example:
+## Tools
 
-```json
-{
-  "cesp_version": "1.0",
-  "name": "my-pack",
-  "display_name": "My Sound Pack",
-  "version": "1.0.0",
-  "categories": {
-    "task.complete": {
-      "sounds": [
-        { "file": "sounds/success.wav", "label": "Success!" },
-        { "file": "sounds/nice-work.wav", "label": "Nice work" }
-      ]
-    },
-    "task.error": {
-      "sounds": [
-        { "file": "sounds/oops.wav", "label": "Oops" }
-      ]
-    }
-  }
-}
+### sfx-tagger
+
+A CLI tool that analyses short UI sound effects and classifies them across 8 dimensions: sentiment, duration, loudness, intensity, pitch, envelope, tonality, and type.
+
+Useful for mapping unfamiliar sound libraries to CESP categories — run sfx-tagger to understand what each sound "feels like", then assign them to the right events.
+
+```bash
+# Install dependencies
+pip install -r tools/sfx-tagger/requirements.txt
+
+# Tag all WAVs in a directory
+python3 tools/sfx-tagger/sfx_tagger.py ./sounds/*.wav
+
+# Include raw feature values
+python3 tools/sfx-tagger/sfx_tagger.py ./sounds/*.wav --verbose
 ```
 
-Add recommended fields for registry submission:
+Includes an interactive review tool for verifying and correcting tags:
 
-```json
-{
-  "cesp_version": "1.0",
-  "name": "my-pack",
-  "display_name": "My Sound Pack",
-  "version": "1.0.0",
-  "description": "Short description of your pack",
-  "author": { "name": "Your Name", "github": "your-github" },
-  "license": "CC-BY-4.0",
-  "language": "en",
-  "homepage": "https://github.com/you/openpeon-my-pack",
-  "tags": ["comedy", "gaming"],
-  "categories": { ... }
-}
+```bash
+python3 tools/sfx-tagger/review.py path/to/tags.json
 ```
 
-### Event categories
-
-Your pack maps sounds to these categories. Players pick a random sound from each category when the event fires.
-
-#### Core categories (at least one required)
-
-| Category | When it fires | Example sounds |
-|---|---|---|
-| `session.start` | IDE opens, agent connects | "Hello", "Ready to work" |
-| `task.acknowledge` | Command accepted, build starting | "On it", "Working..." |
-| `task.complete` | Build done, test passed, task finished | "Done!", "Excellent" |
-| `task.error` | Build failure, crash, test failure | "Oops", "That's broken" |
-| `input.required` | Waiting for user approval or input | "Your turn", "Waiting..." |
-| `resource.limit` | Rate limit, token limit, quota hit | "Slow down", "Out of juice" |
-
-#### Extended categories (optional)
-
-| Category | When it fires |
-|---|---|
-| `user.spam` | User sending commands too rapidly |
-| `session.end` | Session closes gracefully |
-| `task.progress` | Long-running task still going |
-
-### Sound entry fields
-
-Each sound in a category has these fields:
-
-| Field | Required | Description |
-|---|---|---|
-| `file` | Yes | Path to audio file, relative to manifest. Use forward slashes. |
-| `label` | Yes | Human-readable description (for accessibility and display). |
-| `sha256` | For registry | SHA-256 hex digest of the file. |
-| `icon` | No | Path to an icon image for this sound. |
-
-### Audio file rules
-
-- **Formats**: WAV, MP3, or OGG Vorbis
-- **Max file size**: 1 MB per file
-- **Max pack size**: 50 MB total
-- **Filenames**: alphanumeric, dots, underscores, hyphens only — no spaces, no Unicode
-- Files must be valid audio (checked via magic bytes)
-
-### Icons (optional)
-
-- **Format**: PNG (required support), JPEG, WebP, SVG (optional support)
-- **Max size**: 500 KB per icon
-- **Recommended dimensions**: 256x256 px
-- Players resolve icons in order: sound-level > category-level > pack-level > `icon.png` at root
-
-### Backward compatibility
-
-If migrating from an older peon-ping `manifest.json`, add a `category_aliases` field to support legacy category names:
-
-```json
-{
-  "category_aliases": {
-    "greeting": "session.start",
-    "acknowledge": "task.acknowledge",
-    "complete": "task.complete",
-    "error": "task.error",
-    "permission": "input.required",
-    "resource_limit": "resource.limit",
-    "annoyed": "user.spam"
-  }
-}
-```
-
-### Publishing to the registry
-
-1. Add `sha256` checksums to every sound entry
-2. Include `author.github` and `license` fields
-3. Tag a release: `git tag v1.0.0 && git push origin v1.0.0`
-4. Submit a PR to the [registry](https://github.com/PeonPing/registry)
-
-You can also use the [guided pack creator](https://openpeon.com/create).
-
-### Quick checklist
-
-- [ ] `openpeon.json` at the root with `cesp_version: "1.0"`
-- [ ] `name` matches `^[a-z0-9][a-z0-9_-]*$` (1-64 chars)
-- [ ] `version` follows semver (e.g. `1.0.0`)
-- [ ] At least one core category has sounds
-- [ ] All `file` paths resolve to existing audio files
-- [ ] Audio files are WAV, MP3, or OGG and under 1 MB each
-- [ ] Total pack size under 50 MB
-- [ ] No spaces or Unicode in filenames
-- [ ] `label` provided for every sound entry
-
-## Using sfx-tagger
-
-See [tools/sfx-tagger/README.md](tools/sfx-tagger/README.md) for the audio analysis tool that can help you tag and categorise sound effects.
+See [tools/sfx-tagger/README.md](tools/sfx-tagger/README.md) for full documentation of the analysis architecture, all 15 extracted features, and the 8 classifiers.
