@@ -10,12 +10,11 @@ Packs in this repo follow the [OpenPeon](https://github.com/PeonPing/openpeon) f
 
 | Pack | Style | Sounds | Categories | License |
 |---|---|---|---|---|
-| [cute-minimal](openpeon-cute-minimal/) | Light, playful UI beeps | 4 | 4 | CC0 |
-| [dreamy-minimal](openpeon-dreamy-minimal/) | Soft, warm tonal beeps | 5 | 4 | CC0 |
-| [nightflame-minimal](openpeon-nightflame-minimal/) | Minimal sweeps and tones | 5 | 4 | CC0 |
-| [modern-varied](openpeon-modern-varied/) | Cyberpunk synth UI effects | 28 | 7 | CC0 |
-| [nezuai-varied](openpeon-nezuai-varied/) | Designed whooshes, beeps, thuds | 17 | 7 | CC-BY-4.0 |
-| [worms-classic-varied](openpeon-worms-classic-varied/) | Worms game voice clips | 53 | 7 | CC-BY-NC-4.0 |
+| [cute-minimal](openpeon-cute-minimal/) | Light, playful UI beeps | 7 | 7 | MIT |
+| [dreamy-minimal](openpeon-dreamy-minimal/) | Soft, warm tonal beeps | 7 | 7 | MIT |
+| [nightflame-minimal](openpeon-nightflame-minimal/) | Minimal sweeps and tones | 7 | 7 | MIT |
+| [modern-varied](openpeon-modern-varied/) | Cyberpunk synth UI effects | 28 | 7 | MIT |
+| [nezuai-varied](openpeon-nezuai-varied/) | Designed whooshes, beeps, thuds | 17 | 7 | MIT |
 
 ### Installing a pack
 
