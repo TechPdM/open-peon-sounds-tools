@@ -22,7 +22,7 @@
         {
           "file": "sounds/menu-fx-02.wav",
           "label": "Attention whoosh",
-          "sha256": "881768dc69281945548d193ec3e209a5d48e876b2caf3fd400f7265d8b1860cd"
+          "sha256": "bacae9f24d844adfe098b687bf993d9ca9f8ca11d849b065b1d1fc19ae7cacec"
         }
       ]
     },
@@ -31,7 +31,7 @@
         {
           "file": "sounds/menu-fx-02-low.wav",
           "label": "Attention whoosh (low)",
-          "sha256": "ba273aa036441fea34480345134a36f66becbf72dec5f3c10ef1ba462eb9af35"
+          "sha256": "2bbe13d71cbc24853609f111d11a5035c53467090e5f2d32aa1bf72657f99007"
         }
       ]
     },
@@ -40,7 +40,7 @@
         {
           "file": "sounds/menu-fx-03-normal.wav",
           "label": "Confirmation tone",
-          "sha256": "083e483633a6b8e8bea77b9a8152a8c643dc9b3585a4ee5a731c2867200e32bf"
+          "sha256": "454a2fac755240a29f979c095611db4ce50c7435982b2a063a01177403cdf198"
         }
       ]
     },
@@ -49,7 +49,7 @@
         {
           "file": "sounds/menu-fx-03-descending.wav",
           "label": "Descending tone",
-          "sha256": "7cf3842954b510029cd81f9221ce5ea193f7216cb2429f3cc2ba3e589b6bcf91"
+          "sha256": "0d7107dd8f9f3981dc0e1096edf584934937c4544e92b5d8378e6ff689b654e2"
         }
       ]
     },
@@ -58,7 +58,7 @@
         {
           "file": "sounds/menu-fx-01.wav",
           "label": "Session sweep",
-          "sha256": "bce917941e9a0043f82e260ef2299c81b2ddf4de5a59700b77e592d136b79b51"
+          "sha256": "2de7a964fa914e3b3ee32eecbbfaa9cb7d60e8b3676d93c8d68ae0aebd529301"
         }
       ]
     },
@@ -67,7 +67,7 @@
         {
           "file": "sounds/menu-fx-03-ascending.wav",
           "label": "Ascending tone",
-          "sha256": "970fa64de17c90b3cc5694d85bde13d9a29336936962e5feb544c166c87f1cbd"
+          "sha256": "3ae57b4de2dd4da0a368bbcd63e1df66d5b26cbe258f4b7b059ff5fc940d7f07"
         }
       ]
     },
@@ -76,7 +76,7 @@
         {
           "file": "sounds/menu-fx-01-low.wav",
           "label": "Session sweep (low)",
-          "sha256": "0468abfe5832e95f43a7504da3ec26fb430656e595af45bba072ca599a3708c5"
+          "sha256": "1a926afa665dc4de234f6b171bf2cd29331eb2a0d4beb80f8f70ece6b8dde6f1"
         }
       ]
     }

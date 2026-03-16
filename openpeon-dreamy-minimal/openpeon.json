@@ -23,7 +23,7 @@
         {
           "file": "sounds/soft-dreamy-beep-alternative-version.wav",
           "label": "Soft dreamy beep (alt)",
-          "sha256": "e0ff45dc52cb6b4be8bbe70873ad28ecef1b3a08de5471e04f292ae64db4bcf3"
+          "sha256": "6d0909e65b64cf2c4c10c61188150495d7071798f4e32d83d8951d98c064d486"
         }
       ]
     },
@@ -32,7 +32,7 @@
         {
           "file": "sounds/correct-blips.wav",
           "label": "Correct blips",
-          "sha256": "c109136e1563da67698ce801e829a07d1384e5946e8c36ca422b8aba5191e453"
+          "sha256": "fca01135ce0539fb8cfc0f4a28e4c865e2d713a20f9885a3da0b134904519695"
         }
       ]
     },
@@ -41,7 +41,7 @@
         {
           "file": "sounds/soft-dreamy-beep.wav",
           "label": "Soft dreamy beep",
-          "sha256": "58f91213b3c83a5c5676d7f8aaf4c72ef55f8987606a5d1f18d4a3d0951a5840"
+          "sha256": "0f43ee12f43139f12cec78f750ad8003ad4c74ae6aeb846c5e8cbd0da0015b0d"
         }
       ]
     },
@@ -50,7 +50,7 @@
         {
           "file": "sounds/menu-beep.wav",
           "label": "Menu beep",
-          "sha256": "8eac125ba017c2e78650394d2d2fc61561cf1b3f09c1755a7046f8ade2260010"
+          "sha256": "9bcec26d83a5002a6b11fc3ea5b780f03613d4e3dfabdd2c084c96f02ea442c9"
         }
       ]
     },
@@ -59,7 +59,7 @@
         {
           "file": "sounds/positive-blip-effect.wav",
           "label": "Positive blip",
-          "sha256": "af400937c35a1aed0f701a8a3089da7b6c00b52499bc32943549fd847e261c00"
+          "sha256": "78ac31082240790e5a64d7c2bbbba461c95a5ef4374d46766f4a9f2fffec6ee2"
         }
       ]
     },
@@ -68,7 +68,7 @@
         {
           "file": "sounds/menu-beep-low.wav",
           "label": "Menu beep (low)",
-          "sha256": "0a231fa48df080a675572259659b5c1020505d697c860e5ac8f910bc245ecd35"
+          "sha256": "8251218aa06992c3cc11eaadd4aa772f7ae307dc54e8afa8ae9430a6f8b37dfd"
         }
       ]
     },
@@ -77,7 +77,7 @@
         {
           "file": "sounds/soft-dreamy-beep-low.wav",
           "label": "Soft dreamy beep (low)",
-          "sha256": "decc6075cedb970cbe43eb5f5d11c4df0577833e327feed9dbec4a78de8a0833"
+          "sha256": "66fa6e46222918ea17d7d6ade19230b770a2ea7accf046af451c8bc8cb9cbc79"
         }
       ]
     }

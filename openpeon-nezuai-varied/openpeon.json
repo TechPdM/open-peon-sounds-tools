@@ -23,12 +23,12 @@
         {
           "file": "sounds/ui-sound-9.wav",
           "label": "Swelling whoosh",
-          "sha256": "b675520a5853ef904c7f6bcc94418f826bba26248c0103dbaf0ff9b8979b187e"
+          "sha256": "4fafa30d1a6414d402cf4fac88a177a734834764791a9a159139def0daaa6c0b"
         },
         {
           "file": "sounds/ui-sound-4.wav",
           "label": "Intense whoosh",
-          "sha256": "0342e2e84e5832bf6a2bf3fcf3fb3124952d9716e1845a95fa02abed91c6ba6d"
+          "sha256": "21e1f1d0ddaeb926b57dbfe18a991a347383f541e1021a49aecc473bcb4e9f02"
         }
       ]
     },
@@ -37,12 +37,12 @@
         {
           "file": "sounds/ui-sound-1.wav",
           "label": "Short buzz",
-          "sha256": "390c173f6b416f95dbab1e437fb0ab4d74223642ca45808a830629cfd68dfb07"
+          "sha256": "f1d4e31ebb369919ab6141779166cb793610e3a007c89e0e5a41bc8c9df29459"
         },
         {
           "file": "sounds/ui-sound-3.wav",
           "label": "Decaying beep",
-          "sha256": "4b8b3b0e57bbc011c0160c21f7f45dfad4443b06446947a4fac8031a81721715"
+          "sha256": "1528c700729ea6897fa5bd0cf27f4b14ad9b75f7c7f5f489cb46ac618f01b42f"
         }
       ]
     },
@@ -51,12 +51,12 @@
         {
           "file": "sounds/ui-sound-5.wav",
           "label": "Positive whoosh",
-          "sha256": "079f93150e49d6b40ea8b30602a884032295ab33adde04592004cb47e9e1b2dd"
+          "sha256": "ec6a88e08ebdea635be19a40ba731e6948bd4f74a6d371595ec8fbe60e8f8525"
         },
         {
           "file": "sounds/ui-sound-12.wav",
           "label": "Neutral beep",
-          "sha256": "a893f0264bde9ebdb566978f951aec16dcfe8781d493819214aaa540873b8ca3"
+          "sha256": "696b6949fc9ec617c6462463cb2b07b3c4cdf2199ba3ff8d044ce72986f37bc0"
         }
       ]
     },
@@ -65,17 +65,17 @@
         {
           "file": "sounds/ui-sound-2.wav",
           "label": "Low thud",
-          "sha256": "b03e1f6e8f86ce749ff64c99cfa669ed8e9e0f769a958f83f64bb98edf5ed7fb"
+          "sha256": "85d589756cd90da8e6265000266207dd34a134d58c7b88545633c129a4093ada"
         },
         {
           "file": "sounds/ui-sound-11.wav",
           "label": "Negative beep",
-          "sha256": "a87082ce55539bf69d3846e30b4fbe76e83ecd176327bc0ae40f04d678f02178"
+          "sha256": "1f57b50d64decefd13b329dc0593b972333bb4eab20c9c7e9e405529c1b7c75d"
         },
         {
           "file": "sounds/ui-sound-10.wav",
           "label": "High negative whoosh",
-          "sha256": "6ea37cd6f72eb193bc8ab5c476894c41c513301dd3e45eb58dc3b54fd31aef27"
+          "sha256": "2193d14cb2f1964e1f1f861bf21c19a698cea43a20f23e0ae1770ed9915e769a"
         }
       ]
     },
@@ -84,12 +84,12 @@
         {
           "file": "sounds/ui-sound-6.wav",
           "label": "High whoosh",
-          "sha256": "3a101bcb0b2be8bb3ea983f923f004253e82631bbd7e88fc95b78ee152126af9"
+          "sha256": "ffe3e1b2cba93aa29654d6749277dc690e967ff0e751ccb8ed65a57cb991d12e"
         },
         {
           "file": "sounds/ui-sound-14.wav",
           "label": "Long high beep",
-          "sha256": "9efccbae9da2e8250e96325dece4b59ad99e231458c63b0f0a21a011c814e11b"
+          "sha256": "ca9ce6b60156553f17a6a4491b4b6e85de5f4a8ab71ef31ac54815d3af0d056a"
         }
       ]
     },
@@ -98,12 +98,12 @@
         {
           "file": "sounds/ui-sound-16.wav",
           "label": "Warning sweep",
-          "sha256": "ab11809b184125d7e4ce0f23d495e9e723acd239710883c8f6dcdf613a1a31f9"
+          "sha256": "28dab6b0404515fcc890bcf799383aec2c524e7836b1887b1ea75919f05fb69e"
         },
         {
           "file": "sounds/ui-sound-17.wav",
           "label": "Low warning tone",
-          "sha256": "778d03219c85434107d138ef1b2e0e3f6b467156d7b82f84347a5ca68150f8c3"
+          "sha256": "198a95107cd128d16c992cbf55ba427ec85f8c9042db6ae8ef03aee3267f0399"
         }
       ]
     },
@@ -112,22 +112,22 @@
         {
           "file": "sounds/ui-sound-7.wav",
           "label": "Low buzz",
-          "sha256": "55c80caa32998a0a508ffc6457b4554447cf995e809b1a62c24acb475850f3d4"
+          "sha256": "ca0873133164d246d47d45880f29df34c58a870a185192284ac768b61bf7b239"
         },
         {
           "file": "sounds/ui-sound-8.wav",
           "label": "Dismissive whoosh",
-          "sha256": "b45262ed8e26a5ecdf893f507b94812df41af58a53d6ebceadd07ce574e08b79"
+          "sha256": "42febd9f30b3e42fd9410383080beaf9aaf1df0396d2fc9b08f521ca183b1c7e"
         },
         {
           "file": "sounds/ui-sound-13.wav",
           "label": "Negative whoosh",
-          "sha256": "400693494125b08781d34e05a3cb0db59de8f739e3cc86639ad38151e00dedd4"
+          "sha256": "0136d090c664231c48b0b34cf592724b56be340b7035a9308b779d7e4509c069"
         },
         {
           "file": "sounds/ui-sound-15.wav",
           "label": "Long low beep",
-          "sha256": "e070df2c7f5a5ad46f8b4870b25153fa65965b613129d06dd87c9bda53fda111"
+          "sha256": "3231bf68b683e8f49683191e515fddee6850e5722148de944e782266f2e69a92"
         }
       ]
     }

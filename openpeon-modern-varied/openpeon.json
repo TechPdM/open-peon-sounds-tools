@@ -22,17 +22,17 @@
         {
           "file": "sounds/popup2-open.wav",
           "label": "Popup open (bright)",
-          "sha256": "1b2df16fc2743b62b33720965e83ef3865c9d88bbedd818b1226a3e1743c91e0"
+          "sha256": "929196c307b4f4ba6a43e6b7f1c21c98718ea0d4a2b2ec96f5e308134a18b79a"
         },
         {
           "file": "sounds/popup3-open.wav",
           "label": "Popup open (neutral)",
-          "sha256": "a0fd091754aa9706b451d4665297e829ccad61ce5ac7c094cfb7a0ab62b79a9a"
+          "sha256": "311f8147516bd18bf5da8183deb95be38a227f60bc27391039c0ca7eeec41d05"
         },
         {
           "file": "sounds/menu-move5.wav",
           "label": "Session ping",
-          "sha256": "aaa30cb1f68a9640a23956eef1223d7403e604f3e51898075142298b9b70bc86"
+          "sha256": "c527fb5151e9b6df69c7476cf74769a30619b43ea50727658bc6ad4137cafff7"
         }
       ]
     },
@@ -41,27 +41,27 @@
         {
           "file": "sounds/hightech_confirm1.wav",
           "label": "Hightech confirm 1",
-          "sha256": "e546e1e190784fd10b565b3ad28a440f46a5fc23394371a4b31130e265941192"
+          "sha256": "188da4d5b3d8c69b2a53d42921fac7cbd50ad62f2ca895db379aa51e3eadfa75"
         },
         {
           "file": "sounds/hightech_confirm2.wav",
           "label": "Hightech confirm 2",
-          "sha256": "dad121188a3091bf777342b7006550d5ab8283076e9faaaa770e5f79db12fcd4"
+          "sha256": "4170c194f2e94c5e1adab73afa41ae3cf560f41eb2c6276955fa96ff637c3a79"
         },
         {
           "file": "sounds/hightech_confirm3.wav",
           "label": "Hightech confirm 3",
-          "sha256": "dd8d71337b05f35f44e34e53d5c04314949c05fda8996c136b9d6f75eac3fb97"
+          "sha256": "b2793c425ee54d47e2b406f2d363ee2144a264fdc3b99e3c79aa636a9c7313a7"
         },
         {
           "file": "sounds/menu-move1.wav",
           "label": "Menu chime",
-          "sha256": "791f4055653c24a15bfeb5b14286c93876ef415224d15e49daa997f87929d984"
+          "sha256": "7381ff190214bc6461be67164de98ff4b2a4981db727ee7274b7a8306107128a"
         },
         {
           "file": "sounds/menu-move4.wav",
           "label": "Menu ping",
-          "sha256": "27ec0d059a0a99e9b1cf733b8b57caa268835078679aff0fac3127fdb680efb8"
+          "sha256": "90445346a164cf011d94a587ac17edddcba12030d392fbeb1d4f22d5897cd73f"
         }
       ]
     },
@@ -70,32 +70,32 @@
         {
           "file": "sounds/alert2-version-3.wav",
           "label": "Success alert 1",
-          "sha256": "8a957853a5fbe8071ceef90ce5aa1f046ffeb0d4649766626f61737c566702e2"
+          "sha256": "a722e7c1faee21a36ef4dbda84bca8675f6ecdf5e5e870df4768b8d88698a271"
         },
         {
           "file": "sounds/alert2-version-4.wav",
           "label": "Success alert 2",
-          "sha256": "bd880f09b9e1356bee6ec6514aa945c2023395f4c066b4c2e95bc45a3e03dc5f"
+          "sha256": "2d152388d0b39872ab97412bbd7064567fb15872b2936964cce4fad7ef0c1600"
         },
         {
           "file": "sounds/alert2-version-6.wav",
           "label": "Success alert 3",
-          "sha256": "9468abe4892eda540e2f5072757d37017ac6605956363a0026dc36c29d9f2f2f"
+          "sha256": "433430f273f335baa4e5ac46802a42bcd2831ee3917f1ad987442e27f769088c"
         },
         {
           "file": "sounds/alert2-version-7.wav",
           "label": "Success alert 4",
-          "sha256": "87393907550531cfb2d34f0b82f9818ec39c3903c00144f6d3e136f239c53112"
+          "sha256": "458893bc9c95652d96d7e933bd561ed9c7b70e63f9590b836f90a320e42fb980"
         },
         {
           "file": "sounds/alert2-version-12.wav",
           "label": "Success alert 5",
-          "sha256": "1a6c753c025feca9fe25b3471218fe4a08b6a9e82b4f015e70cb5039ae3922f0"
+          "sha256": "4434fcb8f9f29277815494d9ad04a274843131f7c1182073b2af591c442e89a7"
         },
         {
           "file": "sounds/alert2-version-13.wav",
           "label": "Success alert 6",
-          "sha256": "25b33365264054820463c275de64ac959c8e03e438e51c8e5733da13be887127"
+          "sha256": "01bb8c02fbba46977a2ba6896f891551c301a3cb1221638120aa7f25dc2ada7c"
         }
       ]
     },
@@ -104,22 +104,22 @@
         {
           "file": "sounds/ui-error1.wav",
           "label": "UI error buzz",
-          "sha256": "0dc2bb2dfaa02c4ae5c39a4922c337fd0db490e4452131d7dbd7cf9e9d55ec20"
+          "sha256": "aa0b490868a273c813995f12550d95cff93ac533c7a8b5e8d31721cc635ad778"
         },
         {
           "file": "sounds/popup-close.wav",
           "label": "Popup close (dark)",
-          "sha256": "e9faab89f9554313a748abc77bb18eab8f1f60c26f102c61b34b112d8521274a"
+          "sha256": "70902a3db15353171e272047797d114828f622c137972e2852c8c09027c0eb58"
         },
         {
           "file": "sounds/popup-open.wav",
           "label": "Popup open (harsh)",
-          "sha256": "c65f62fd3ba8c3fd1784feb7e9e3909d96aff64fee0ad02ed705494d675d7698"
+          "sha256": "69d68d098c7720329edd1bd121344b10e0302f0125e7ce54eed695df46920b46"
         },
         {
           "file": "sounds/ui-misc1.wav",
           "label": "UI misc buzz",
-          "sha256": "46469409af2c648b59ad7e4c862728e3332503956df5a10ba1126932a30a8784"
+          "sha256": "702bc4fcdb34d8507f1a9d4e0ebff82700d4e09b9cc2a35f8dc1e55faef433b0"
         }
       ]
     },
@@ -128,27 +128,27 @@
         {
           "file": "sounds/notification1.wav",
           "label": "Notification 1",
-          "sha256": "5086f1842934fcc61263fb71a459f93507816fa254741b3d6d59403a9a6a2ca7"
+          "sha256": "79d357d421703b2b8dc34bc3ea37cf19a9b421bd599b4daf2442e92865224e1c"
         },
         {
           "file": "sounds/notification2.wav",
           "label": "Notification 2",
-          "sha256": "88d70ba88c120706fd17f921741883455a686d27189f82906761e448ce384b6b"
+          "sha256": "9fff52dd902dd6bf60105738a9f44babe16978ef37f4e75aca3c6ee97134e61b"
         },
         {
           "file": "sounds/hightech_notification1.wav",
           "label": "Hightech notification 1",
-          "sha256": "b846dde3859fbb4c2dea769631a07584e315bc002db670f29559e661ed0f12d4"
+          "sha256": "859fe77941587c13da5810ff93a2e32560e53313317ec11f7cac2a3038c70737"
         },
         {
           "file": "sounds/hightech_notification2.wav",
           "label": "Hightech notification 2",
-          "sha256": "555a9fd3684f7c8f898ca8d591a66f8a068064b3cb2c5c46cb9858ddc486011d"
+          "sha256": "d55cc43de621142c698b4cc5dcf5c2ebf734829916d275d5cb5075ad4adf3250"
         },
         {
           "file": "sounds/hightech_notification3.wav",
           "label": "Hightech notification 3",
-          "sha256": "847a733aead24437ad29f371ff509924bef9f5cc59bf055478970cc38730cef8"
+          "sha256": "c6a3910fc4ba5f41920e50204cb94d4eb7517645c4b57bb0d3a277bf67820c5c"
         }
       ]
     },
@@ -157,17 +157,17 @@
         {
           "file": "sounds/alert2-version-9.wav",
           "label": "Low warning tone",
-          "sha256": "c17c829e873dd52ac93ee72404045f39252d8a4623d111a29acfcb9dac0cd644"
+          "sha256": "30d30a3cb7202b9a88d37a9cf4f197abeabdd50f546b5ec8d664fc103ab4f543"
         },
         {
           "file": "sounds/alert2-version-11.wav",
           "label": "Warning sweep",
-          "sha256": "f1e08c790f3d4db9731696305221d3c6f5056d80fec3c18da09f8252aefadb0d"
+          "sha256": "e69618455cdd751a8b73fdb178b749381bd3c5c44411ff2dad6e663a0ec6bbd0"
         },
         {
           "file": "sounds/popup3-close.wav",
           "label": "Depleted tone",
-          "sha256": "f9c93ead013722901ad44f8b06ed79ae034b3922e3c5f28adc92a99ed0102f8c"
+          "sha256": "6225efdd5c5174644c8119b9b9b04b1588bc9aefe46da22b61424072abc508ab"
         }
       ]
     },
@@ -176,12 +176,12 @@
         {
           "file": "sounds/menu-scroll-1.wav",
           "label": "Menu scroll",
-          "sha256": "c4fd9cdb6fd947ace1757e2b4d6ca9a8f7fb823400556cf5642cbd579b366c77"
+          "sha256": "87a2bbfe11e19baf750936eb3f34a1b62e813dc9dbc6b4a18524893444acb322"
         },
         {
           "file": "sounds/menu-move6.wav",
           "label": "Menu whoosh (dark)",
-          "sha256": "066264a128988d413e7f730c7a42bd1015093c6ea36437073fbc80bc0afc9bcd"
+          "sha256": "131b0368b7f323c464ee7516a2ea62f8daeeb6e2a8ee974de077ce80c4d49ac7"
         }
       ]
     }
