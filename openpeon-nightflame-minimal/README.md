@@ -12,11 +12,13 @@ Sounds were assigned to CESP categories based on their audio characteristics (an
 
 | CESP Category | Sound | Why |
 |---|---|---|
-| session.start | menu-fx-01 (mid sweep) | Longer, sweeping tone suits a session opening |
-| task.acknowledge | menu-fx-03-ascending (rising buzz) | Rising pitch = work accepted |
-| task.complete | menu-fx-03-normal (neutral sweep) | Flat confirmation tone = done |
-| task.error | menu-fx-03-descending (falling buzz) | Falling pitch = something went wrong |
-| input.required | menu-fx-02 (high whoosh) | Short attention-grabbing whoosh |
+| session.start | Attention whoosh | Sweeping tone suits a session opening |
+| task.acknowledge | Attention whoosh (low) | Low whoosh = work accepted |
+| task.complete | Confirmation tone | Flat confirmation tone = done |
+| task.error | Descending tone | Falling pitch = something went wrong |
+| input.required | Session sweep | Attention-grabbing sweep |
+| resource.limit | Ascending tone | Rising pitch = approaching limit |
+| user.spam | Session sweep (low) | Subtle dismissive sweep |
 
 ## License
 

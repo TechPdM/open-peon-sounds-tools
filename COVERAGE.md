@@ -9,7 +9,6 @@
 | modern-varied | 3 | 5 | 6 | 4 | 5 | 3 | 2 |
 | nezuai-varied | 2 | 2 | 2 | 3 | 2 | 2 | 4 |
 | nightflame-minimal | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
-| worms-classic-varied | 3 | 4 | 8 | 17 | 4 | 4 | 6 |
 
 ## Detail
 
@@ -62,13 +61,3 @@
 - **input.required** (1): Session sweep
 - **resource.limit** (1): Ascending tone
 - **user.spam** (1): Session sweep (low)
-
-### worms-classic-varied
-
-- **session.start** (3): Hello, Come on then, Yes sir
-- **task.acknowledge** (4): Orders, Watch this, Fire, Kamikaze
-- **task.complete** (8): Victory, Excellent, Perfect, Flawless, Brilliant, Amazing, First blood, Collect
-- **task.error** (17): Fatality, I'll get you, Oops, Bummer, Oh dear, Stupid, Nooo, What the, Missed, Ouch, Oof 1, Oof 2, Oof 3, Ow 1, Ow 2, Ow 3, Drop
-- **input.required** (4): Hurry, Just you wait, Incoming, Take cover
-- **resource.limit** (4): Run away, Coward, Bye bye, Nooo
-- **user.spam** (6): Boring, Go away, Oi nutter, Leave me alone, You'll regret that, Traitor

@@ -10,12 +10,15 @@ Warm, tonal beeps with a dreamy quality. Subtle and unobtrusive — ideal if you
 
 | CESP Category | Sound | Why |
 |---|---|---|
-| session.start | soft-dreamy-beep (alt) | Gentle opening tone |
-| task.acknowledge | correct-blips | Confirmation blips = acknowledged |
-| task.complete | soft-dreamy-beep, positive-blip-effect | Positive/warm completion tones |
-| input.required | menu-beep | Neutral attention beep |
+| session.start | Soft dreamy beep (alt) | Gentle opening tone |
+| task.acknowledge | Correct blips | Confirmation blips = acknowledged |
+| task.complete | Soft dreamy beep | Warm completion tone |
+| task.error | Menu beep | Neutral error tone |
+| input.required | Positive blip | Attention-grabbing blip |
+| resource.limit | Menu beep (low) | Low warning tone |
+| user.spam | Soft dreamy beep (low) | Subtle dismissive tone |
 
-Only 4 core categories are covered — this is a minimal, ambient pack.
+Minimal pack — 1 sound per category across all 7 CESP categories.
 
 Audio downsampled from 48kHz/24-bit to 44.1kHz/16-bit to meet CESP size limits.
 

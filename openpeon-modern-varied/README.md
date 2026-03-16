@@ -10,17 +10,17 @@ Cyberpunk-flavoured hightech tones — clean confirms, glitchy error buzzes, war
 
 Sounds were assigned to CESP categories based on sfx-tagger analysis (sentiment, pitch, intensity) and filename semantics:
 
-| CESP Category | Sounds | Source group |
+| CESP Category | Count | Sounds |
 |---|---|---|
-| session.start | 3 | popup-open, menu-move5 |
-| task.acknowledge | 5 | hightech_confirm, menu-move |
-| task.complete | 6 | alert2 (positive sentiment) |
-| task.error | 4 | ui-error, popup close/open (negative), ui-misc |
-| input.required | 5 | notifications, hightech_notification |
-| resource.limit | 3 | alert2 neutral variants, popup3-close |
-| user.spam | 2 | menu-scroll, menu-move6 |
+| session.start | 3 | Popup open (bright), Popup open (neutral), Session ping |
+| task.acknowledge | 5 | Hightech confirm 1, Hightech confirm 2, Hightech confirm 3, Menu chime, Menu ping |
+| task.complete | 6 | Success alert 1–6 |
+| task.error | 4 | UI error buzz, Popup close (dark), Popup open (harsh), UI misc buzz |
+| input.required | 5 | Notification 1, Notification 2, Hightech notification 1–3 |
+| resource.limit | 3 | Low warning tone, Warning sweep, Depleted tone |
+| user.spam | 2 | Menu scroll, Menu whoosh (dark) |
 
-All sounds are under the 1 MB CESP file size limit. 51 sounds from the original pack were excluded (cybersynths, oversized power-ups/alarms, duplicate variants).
+28 sounds across all 7 CESP categories. 51 sounds from the original pack were excluded (cybersynths, oversized power-ups/alarms, duplicate variants).
 
 ## License
 

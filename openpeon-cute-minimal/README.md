@@ -10,12 +10,15 @@ Simple, cute synthesised UI tones — short and unobtrusive. Good for a lighthea
 
 | CESP Category | Sound | Why |
 |---|---|---|
-| session.start | pause-sound | Short opening tone |
-| task.complete | confirm-sound | Positive confirmation beep |
-| task.error | cancel-sound | Cancel/negative tone |
-| input.required | hover-sound | Neutral attention tone |
+| session.start | Pause | Short opening tone |
+| task.acknowledge | Confirm | Positive confirmation beep |
+| task.complete | Cancel | Completion tone |
+| task.error | Cancel (low) | Cancel/negative tone |
+| input.required | Hover | Neutral attention tone |
+| resource.limit | Pause (low) | Low warning tone |
+| user.spam | Hover (low) | Subtle dismissive tone |
 
-Minimal 4-category pack — covers the essentials.
+Minimal pack — 1 sound per category across all 7 CESP categories.
 
 ## License
 
