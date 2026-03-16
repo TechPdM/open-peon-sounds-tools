@@ -22,7 +22,7 @@ Synthetic, designed UI effects — whooshes, beeps, sweeps, thuds, and buzzes. H
 
 ## License
 
-CC BY 4.0 — see [LICENSE](LICENSE).
+MIT — see [LICENSE](../LICENSE). Sound samples are CC BY 4.0 — see [sounds/LICENSE](sounds/LICENSE).
 
 ## Attribution
 

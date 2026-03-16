@@ -24,7 +24,7 @@ Audio downsampled from 48kHz/24-bit to 44.1kHz/16-bit to meet CESP size limits.
 
 ## License
 
-CC0 1.0 (public domain) — see [LICENSE](LICENSE).
+MIT — see [LICENSE](../LICENSE). Sound samples are CC0 1.0 (public domain) — see [sounds/LICENSE](sounds/LICENSE).
 
 ## Attribution
 

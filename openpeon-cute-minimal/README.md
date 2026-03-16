@@ -22,7 +22,7 @@ Minimal pack — 1 sound per category across all 7 CESP categories.
 
 ## License
 
-CC0 1.0 (public domain) — see [LICENSE](LICENSE).
+MIT — see [LICENSE](../LICENSE). Sound samples are CC0 1.0 (public domain) — see [sounds/LICENSE](sounds/LICENSE).
 
 ## Attribution
 
